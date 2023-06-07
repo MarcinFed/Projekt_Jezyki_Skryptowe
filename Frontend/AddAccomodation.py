@@ -5,13 +5,13 @@ from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
 
 
-class ChooseActionWindow(QMainWindow):
+class AddAccommodation(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Edycja")
+        self.setWindowTitle("Zakwaterowanie")
         self.setWindowIcon(QIcon("Logo.jpg"))
-        self.setMinimumWidth(300)
+        self.setMinimumWidth(500)
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -19,35 +19,62 @@ class ChooseActionWindow(QMainWindow):
         self.main_layout = QVBoxLayout(self.central_widget)
 
         self.top_layout = QVBoxLayout()
-        self.question_label = QLabel("Co chcesz edytować ?")
-        self.question_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.question_label.setStyleSheet("font-weight: bold;")
-        self.top_layout.addWidget(self.question_label)
 
-        self.middle_layout = QHBoxLayout()
+        self.name_label = QLabel("Nazwa")
+        self.top_layout.addWidget(self.name_label)
 
-        self.accommodation_button = QPushButton("Zawkaterowanie")
-        self.accommodation_button.setStyleSheet("background-color: darkorange; color: black;")
+        self.name_view = QLineEdit()
+        self.name_view.setReadOnly(False)
+        self.top_layout.addWidget(self.name_view)
 
-        self.plan_button = QPushButton("Plan")
-        self.plan_button.setStyleSheet("background-color: darkblue; color: black;")
+        self.city_label = QLabel("Miasto")
+        self.top_layout.addWidget(self.city_label)
 
-        self.transport_button = QPushButton("Transport")
-        self.transport_button.setStyleSheet("background-color: darkgreen; color: black;")
+        self.city_view = QLineEdit()
+        self.city_view.setReadOnly(False)
+        self.top_layout.addWidget(self.city_view)
 
-        self.middle_layout.addWidget(self.accommodation_button)
-        self.middle_layout.addWidget(self.plan_button)
-        self.middle_layout.addWidget(self.transport_button)
+        self.post_label = QLabel("Kod pocztowy")
+        self.top_layout.addWidget(self.post_label)
 
-        self.bottom_layout = QVBoxLayout()
+        self.post_view = QLineEdit()
+        self.post_view.setReadOnly(False)
+        self.top_layout.addWidget(self.post_view)
+
+        self.street_label = QLabel("Ulica")
+        self.top_layout.addWidget(self.street_label)
+
+        self.street_view = QLineEdit()
+        self.street_view.setReadOnly(False)
+        self.top_layout.addWidget(self.street_view)
+
+        self.building_label = QLabel("Nr budynku")
+        self.top_layout.addWidget(self.building_label)
+
+        self.building_view = QLineEdit()
+        self.building_view.setReadOnly(False)
+        self.top_layout.addWidget(self.building_view)
+
+        self.apartment_label = QLabel("Nr mieszkania")
+        self.top_layout.addWidget(self.apartment_label)
+
+        self.apartment_view = QLineEdit()
+        self.apartment_view.setReadOnly(False)
+        self.top_layout.addWidget(self.apartment_view)
+
+        self.bottom_layout = QHBoxLayout()
 
         self.cancel_button = QPushButton("Anuluj")
         self.cancel_button.setStyleSheet("background-color: darkred; color: black;")
 
         self.bottom_layout.addWidget(self.cancel_button)
 
+        self.save_button = QPushButton("Zapisz")
+        self.save_button.setStyleSheet("background-color: darkgreen; color: black;")
+
+        self.bottom_layout.addWidget(self.save_button)
+
         self.main_layout.addLayout(self.top_layout)
-        self.main_layout.addLayout(self.middle_layout)
         self.main_layout.addLayout(self.bottom_layout)
 
 
@@ -69,6 +96,6 @@ if __name__ == "__main__":
     dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
     app.setPalette(dark_palette)
-    viewer = ChooseActionWindow()
+    viewer = AddAccommodation()
     viewer.show()
     sys.exit(app.exec())

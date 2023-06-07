@@ -1,12 +1,15 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
-                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy
+                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QMessageBox
 from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
+from AddTravel import AddTravelWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.add_travel_window = None
 
         self.setWindowTitle("TripSet")
         self.setWindowIcon(QIcon("Logo.jpg"))
@@ -20,10 +23,20 @@ class MainWindow(QMainWindow):
         # Top widget
         self.top_layout = QHBoxLayout()
 
-        self.left_top_layout = QHBoxLayout()
+        self.left_top_layout = QVBoxLayout()
+
+        self.list_label = QLabel("Wyjazdy")
+        self.list_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.list_label.setStyleSheet("font-weight: bold;")
+        self.left_top_layout.addWidget(self.list_label)
 
         self.travels_list = QListWidget()
         self.left_top_layout.addWidget(self.travels_list)
+
+        self.save_button = QPushButton("Zapisz")
+        self.save_button.setStyleSheet("background-color: #8B93D8; color: black;")
+        self.save_button.setEnabled(True)
+        self.left_top_layout.addWidget(self.save_button)
 
         self.right_top_layout = QVBoxLayout()
 
@@ -81,6 +94,7 @@ class MainWindow(QMainWindow):
 
         self.new_button = QPushButton("Dodaj")
         self.new_button.setStyleSheet("background-color: darkgreen; color: black;")
+        self.new_button.clicked.connect(self.open_add_travel_window)
 
         self.delete_button = QPushButton("Usuń")
         self.delete_button.setStyleSheet("background-color: darkred; color: black;")
@@ -121,6 +135,11 @@ class MainWindow(QMainWindow):
             self.calendar_button.setStyleSheet("background-color: orange; color: black;")
         else:
             self.calendar_button.setStyleSheet("background-color: grey; color: black;")
+
+    def open_add_travel_window(self):
+        self.add_travel_window = AddTravelWindow(self)
+        self.close()
+        self.add_travel_window.show()
 
 
 if __name__ == "__main__":

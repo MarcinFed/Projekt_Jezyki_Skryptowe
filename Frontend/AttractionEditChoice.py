@@ -1,11 +1,11 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
-                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy
-from PyQt6.QtCore import QDateTime, Qt
+                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QCalendarWidget
+from PyQt6.QtCore import QDateTime, Qt, QDate
 from PyQt6.QtGui import QPalette, QColor, QIcon
 
 
-class ChooseActionWindow(QMainWindow):
+class AttractionEditChoice(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -19,30 +19,26 @@ class ChooseActionWindow(QMainWindow):
         self.main_layout = QVBoxLayout(self.central_widget)
 
         self.top_layout = QVBoxLayout()
-        self.question_label = QLabel("Co chcesz edytować ?")
+        self.question_label = QLabel("Co chcesz zrobić ?")
         self.question_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.question_label.setStyleSheet("font-weight: bold;")
         self.top_layout.addWidget(self.question_label)
 
         self.middle_layout = QHBoxLayout()
 
-        self.accommodation_button = QPushButton("Zawkaterowanie")
-        self.accommodation_button.setStyleSheet("background-color: darkorange; color: black;")
+        self.edit_button = QPushButton("Edytuj")
+        self.edit_button.setStyleSheet("background-color: darkblue; color: black;")
 
-        self.plan_button = QPushButton("Plan")
-        self.plan_button.setStyleSheet("background-color: darkblue; color: black;")
+        self.delete_button = QPushButton("Usuń")
+        self.delete_button.setStyleSheet("background-color: darkred; color: black;")
 
-        self.transport_button = QPushButton("Transport")
-        self.transport_button.setStyleSheet("background-color: darkgreen; color: black;")
-
-        self.middle_layout.addWidget(self.accommodation_button)
-        self.middle_layout.addWidget(self.plan_button)
-        self.middle_layout.addWidget(self.transport_button)
+        self.middle_layout.addWidget(self.delete_button)
+        self.middle_layout.addWidget(self.edit_button)
 
         self.bottom_layout = QVBoxLayout()
 
         self.cancel_button = QPushButton("Anuluj")
-        self.cancel_button.setStyleSheet("background-color: darkred; color: black;")
+        self.cancel_button.setStyleSheet("background-color: darkorange; color: black;")
 
         self.bottom_layout.addWidget(self.cancel_button)
 
@@ -69,6 +65,6 @@ if __name__ == "__main__":
     dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
     app.setPalette(dark_palette)
-    viewer = ChooseActionWindow()
+    viewer = AttractionEditChoice()
     viewer.show()
     sys.exit(app.exec())
