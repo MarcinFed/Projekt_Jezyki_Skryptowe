@@ -5,9 +5,12 @@ from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
 
 
-class AddAccommodation(QMainWindow):
-    def __init__(self):
+class AddAccommodationWindow(QMainWindow):
+    def __init__(self, previous_window, travel):
         super().__init__()
+
+        self.previous_window = previous_window
+        self.travel = travel
 
         self.setWindowTitle("Zakwaterowanie")
         self.setWindowIcon(QIcon("Logo.jpg"))
@@ -66,16 +69,28 @@ class AddAccommodation(QMainWindow):
 
         self.cancel_button = QPushButton("Anuluj")
         self.cancel_button.setStyleSheet("background-color: darkred; color: black;")
+        self.cancel_button.clicked.connect(self.cancel)
 
         self.bottom_layout.addWidget(self.cancel_button)
 
         self.save_button = QPushButton("Zapisz")
         self.save_button.setStyleSheet("background-color: darkgreen; color: black;")
+        self.save_button.clicked.connect(self.save)
 
         self.bottom_layout.addWidget(self.save_button)
 
         self.main_layout.addLayout(self.top_layout)
         self.main_layout.addLayout(self.bottom_layout)
+
+    def cancel(self):
+        self.close()
+        self.previous_window.show()
+
+    def save(self):
+        self.travel.set_accommodation(self.name_view.text(), self.city_view.text(), self.post_view.text(), self.street_view.text(), self.building_view.text(), self.apartment_view.text())
+        self.close()
+        self.previous_window.show()
+        self.previous_window.update_details()
 
 
 if __name__ == "__main__":
@@ -96,6 +111,6 @@ if __name__ == "__main__":
     dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
     app.setPalette(dark_palette)
-    viewer = AddAccommodation()
+    viewer = AddAccommodationWindow(None, None)
     viewer.show()
     sys.exit(app.exec())

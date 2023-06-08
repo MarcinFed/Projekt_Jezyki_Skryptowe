@@ -1,15 +1,23 @@
+from Backend.App import App
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
                             QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QMessageBox
 from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
 from AddTravel import AddTravelWindow
+from Confirm import ConfirmWindow
+from ChooseAction import ChooseActionWindow
+
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, app):
         super().__init__()
 
+        self.app = app
+
         self.add_travel_window = None
+        self.confirm_decision = None
+        self.choose_action_window = None
 
         self.setWindowTitle("TripSet")
         self.setWindowIcon(QIcon("Logo.jpg"))
@@ -31,7 +39,9 @@ class MainWindow(QMainWindow):
         self.left_top_layout.addWidget(self.list_label)
 
         self.travels_list = QListWidget()
+        self.travels_list.itemSelectionChanged.connect(self.update_details)
         self.left_top_layout.addWidget(self.travels_list)
+        self.travels_list.clicked.connect(self.enable_buttons)
 
         self.save_button = QPushButton("Zapisz")
         self.save_button.setStyleSheet("background-color: #8B93D8; color: black;")
@@ -54,11 +64,17 @@ class MainWindow(QMainWindow):
         self.destination_view.setReadOnly(True)
         self.right_top_layout.addWidget(self.destination_view)
 
-        self.transport_label = QLabel("Transport")
-        self.right_top_layout.addWidget(self.transport_label)
-        self.transport_view = QLineEdit()
-        self.transport_view.setReadOnly(True)
-        self.right_top_layout.addWidget(self.transport_view)
+        self.transport_to_label = QLabel("Transport do")
+        self.right_top_layout.addWidget(self.transport_to_label)
+        self.transport_to_view = QLineEdit()
+        self.transport_to_view.setReadOnly(True)
+        self.right_top_layout.addWidget(self.transport_to_view)
+
+        self.transport_from_label = QLabel("Transport od")
+        self.right_top_layout.addWidget(self.transport_from_label)
+        self.transport_from_view = QLineEdit()
+        self.transport_from_view.setReadOnly(True)
+        self.right_top_layout.addWidget(self.transport_from_view)
 
         self.accommodation_label = QLabel("Zakwaterowanie")
         self.right_top_layout.addWidget(self.accommodation_label)
@@ -99,10 +115,12 @@ class MainWindow(QMainWindow):
         self.delete_button = QPushButton("Usuń")
         self.delete_button.setStyleSheet("background-color: darkred; color: black;")
         self.delete_button.setEnabled(False)
+        self.delete_button.clicked.connect(self.open_confirm_decision)
 
         self.edit_button = QPushButton("Edytuj")
         self.edit_button.setStyleSheet("background-color: darkblue; color: black;")
         self.edit_button.setEnabled(False)
+        self.edit_button.clicked.connect(self.open_edit_window)
 
         self.calendar_button = QPushButton("Dodaj do kolendarza")
         self.calendar_button.setStyleSheet("background-color: darkorange; color: black;")
@@ -137,9 +155,67 @@ class MainWindow(QMainWindow):
             self.calendar_button.setStyleSheet("background-color: grey; color: black;")
 
     def open_add_travel_window(self):
-        self.add_travel_window = AddTravelWindow(self)
+        self.add_travel_window = AddTravelWindow(self, self.app)
         self.close()
         self.add_travel_window.show()
+
+    def update_travels_list(self):
+        self.travels_list.clear()
+        for travel in self.app.travels:
+            travel_name = travel.name
+            item = QListWidgetItem(travel_name)
+            item.travel = travel
+            self.travels_list.addItem(item)
+
+    def enable_buttons(self):
+        self.delete_button.setEnabled(True)
+        self.edit_button.setEnabled(True)
+        self.calendar_button.setEnabled(True)
+        self.update_button_colors()
+
+    def disable_buttons(self):
+        self.delete_button.setEnabled(False)
+        self.edit_button.setEnabled(False)
+        self.calendar_button.setEnabled(False)
+        self.update_button_colors()
+
+    def delete_selected(self):
+        selected_travels = self.travels_list.selectedItems()
+        if selected_travels:
+            selected_travel = selected_travels[0].travel
+            self.app.travels.remove(selected_travel)
+        self.update_travels_list()
+        self.clear_detail()
+
+    def open_confirm_decision(self):
+        travel_name = self.travels_list.selectedItems()[0].travel.name
+        self.confirm_decision = ConfirmWindow(self, "wyjazd " + travel_name)
+        self.close()
+        self.confirm_decision.show()
+
+    def open_edit_window(self):
+        self.choose_action_window = ChooseActionWindow(self, self.travels_list.selectedItems()[0].travel)
+        self.close()
+        self.choose_action_window.show()
+
+    def update_details(self):
+        selected_travels = self.travels_list.selectedItems()
+        if selected_travels:
+            travel = selected_travels[0].travel
+            self.destination_view.setText(travel.destination if travel.destination is not None else "")
+            self.transport_to_view.setText(travel.transport_to.transport_type if travel.transport_to is not None else "")
+            self.transport_from_view.setText(travel.transport_from.transport_type if travel.transport_from is not None else "")
+            self.accommodation_view.setText(travel.accommodation.name if travel.accommodation is not None else "")
+            self.date_view.setText(str(travel.start_date) + " - " + str(travel.end_date))
+            self.days_view.setText(str(travel.days))
+
+    def clear_detail(self):
+        self.destination_view.clear()
+        self.transport_to_view.clear()
+        self.transport_from_view.clear()
+        self.accommodation_view.clear()
+        self.date_view.clear()
+        self.days_view.clear()
 
 
 if __name__ == "__main__":
@@ -160,6 +236,6 @@ if __name__ == "__main__":
     dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
     app.setPalette(dark_palette)
-    viewer = MainWindow()
+    viewer = MainWindow(App())
     viewer.show()
     sys.exit(app.exec())

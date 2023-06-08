@@ -6,9 +6,10 @@ from PyQt6.QtGui import QPalette, QColor, QIcon
 
 
 class AddTravelWindow(QMainWindow):
-    def __init__(self, window):
+    def __init__(self, window, app):
         super().__init__()
 
+        self.app = app
         self.previous_window = window
 
         self.setWindowTitle("Dodaj podróż")
@@ -64,6 +65,7 @@ class AddTravelWindow(QMainWindow):
 
         self.create_button = QPushButton("Utwórz")
         self.create_button.setStyleSheet("background-color: darkgreen; color: black;")
+        self.create_button.clicked.connect(self.create)
 
         self.cancel_button = QPushButton("Anuluj")
         self.cancel_button.setStyleSheet("background-color: darkred; color: black;")
@@ -78,6 +80,12 @@ class AddTravelWindow(QMainWindow):
 
     def cancel(self):
         self.previous_window.show()
+        self.close()
+
+    def create(self):
+        self.app.add_travel(self.name_view.text(), self.destination_view.text(), self.from_date.selectedDate().toPyDate(),  self.to_date.selectedDate().toPyDate())
+        self.previous_window.show()
+        self.previous_window.update_travels_list()
         self.close()
 
 
@@ -99,6 +107,6 @@ if __name__ == "__main__":
     dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
     app.setPalette(dark_palette)
-    viewer = AddTravelWindow()
+    viewer = AddTravelWindow(None, None)
     viewer.show()
     sys.exit(app.exec())

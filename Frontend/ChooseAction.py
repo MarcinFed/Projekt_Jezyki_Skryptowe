@@ -3,11 +3,16 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
                             QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy
 from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
+from AddAccomodation import AddAccommodationWindow
 
 
 class ChooseActionWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, previous_window, travel):
         super().__init__()
+
+        self.previous_window = previous_window
+        self.travel = travel
+        self.add_accommodation_window = None
 
         self.setWindowTitle("Edycja")
         self.setWindowIcon(QIcon("Logo.jpg"))
@@ -28,6 +33,7 @@ class ChooseActionWindow(QMainWindow):
 
         self.accommodation_button = QPushButton("Zawkaterowanie")
         self.accommodation_button.setStyleSheet("background-color: darkorange; color: black;")
+        self.accommodation_button.clicked.connect(self.accommodation)
 
         self.plan_button = QPushButton("Plan")
         self.plan_button.setStyleSheet("background-color: darkblue; color: black;")
@@ -43,12 +49,22 @@ class ChooseActionWindow(QMainWindow):
 
         self.cancel_button = QPushButton("Anuluj")
         self.cancel_button.setStyleSheet("background-color: darkred; color: black;")
+        self.cancel_button.clicked.connect(self.cancel)
 
         self.bottom_layout.addWidget(self.cancel_button)
 
         self.main_layout.addLayout(self.top_layout)
         self.main_layout.addLayout(self.middle_layout)
         self.main_layout.addLayout(self.bottom_layout)
+
+    def cancel(self):
+        self.previous_window.show()
+        self.close()
+
+    def accommodation(self):
+        self.add_accommodation_window = AddAccommodationWindow(self.previous_window, self.travel)
+        self.close()
+        self.add_accommodation_window.show()
 
 
 if __name__ == "__main__":
