@@ -1,5 +1,5 @@
 class Localization:
-    def __init__(self, city, post_code, street_name, building_number=None, apartment_number=None):
+    def __init__(self, city, street_name, post_code=None, building_number=None, apartment_number=None):
         self.__city = city
         self.__post_code = post_code
         self.__street_name = street_name

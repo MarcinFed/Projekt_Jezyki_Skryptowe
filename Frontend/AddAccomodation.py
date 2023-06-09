@@ -89,7 +89,7 @@ class AddAccommodationWindow(QMainWindow):
 
     def save(self):
         print("OLA")
-        self.travel.accommodation = self.name_view.text(), self.city_view.text(), self.post_view.text(), self.street_view.text(), self.building_view.text(), self.apartment_view.text()
+        self.travel.accommodation = self.name_view.text(), self.city_view.text(), self.street_view.text(), self.post_view.text(), self.building_view.text(), self.apartment_view.text()
         self.close()
         self.previous_window.show()
         self.previous_window.update_details()
