@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
                             QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy
 from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
+from Backend.Localization import Localization
 
 
 class AddAccommodationWindow(QMainWindow):
@@ -87,7 +88,8 @@ class AddAccommodationWindow(QMainWindow):
         self.previous_window.show()
 
     def save(self):
-        self.travel.set_accommodation(self.name_view.text(), self.city_view.text(), self.post_view.text(), self.street_view.text(), self.building_view.text(), self.apartment_view.text())
+        print("OLA")
+        self.travel.accommodation = self.name_view.text(), self.city_view.text(), self.post_view.text(), self.street_view.text(), self.building_view.text(), self.apartment_view.text()
         self.close()
         self.previous_window.show()
         self.previous_window.update_details()
