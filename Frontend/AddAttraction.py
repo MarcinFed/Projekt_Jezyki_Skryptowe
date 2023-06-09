@@ -5,7 +5,7 @@ from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
 
 
-class AddAccommodation(QMainWindow):
+class AddAttractionWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 

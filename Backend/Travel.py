@@ -30,7 +30,8 @@ class Travel:
         return self.__transport_to
 
     @transport_to.setter
-    def transport_to(self, transport_type, departure_time, time, ticket=None):
+    def transport_to(self, values):
+        transport_type, departure_time, time, ticket = values
         self.__transport_to = Transport(transport_type, departure_time, time, ticket)
 
     @property
@@ -38,7 +39,8 @@ class Travel:
         return self.__transport_from
 
     @transport_from.setter
-    def transport_from(self, transport_type, departure_time, time, ticket=None):
+    def transport_from(self, values):
+        transport_type, departure_time, time, ticket = values
         self.__transport_from = Transport(transport_type, departure_time, time, ticket)
 
     @property

@@ -4,6 +4,8 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
 from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
 from AddAccomodation import AddAccommodationWindow
+from AddPlan import AddPlanWindow
+from AddTransport import AddTransportWindow
 
 
 class ChooseActionWindow(QMainWindow):
@@ -13,6 +15,8 @@ class ChooseActionWindow(QMainWindow):
         self.previous_window = previous_window
         self.travel = travel
         self.add_accommodation_window = None
+        self.add_plan_window = None
+        self.add_transport_window = None
 
         self.setWindowTitle("Edycja")
         self.setWindowIcon(QIcon("Logo.jpg"))
@@ -37,9 +41,11 @@ class ChooseActionWindow(QMainWindow):
 
         self.plan_button = QPushButton("Plan")
         self.plan_button.setStyleSheet("background-color: darkblue; color: black;")
+        self.plan_button.clicked.connect(self.plan)
 
         self.transport_button = QPushButton("Transport")
         self.transport_button.setStyleSheet("background-color: darkgreen; color: black;")
+        self.transport_button.clicked.connect(self.transport)
 
         self.middle_layout.addWidget(self.accommodation_button)
         self.middle_layout.addWidget(self.plan_button)
@@ -66,6 +72,16 @@ class ChooseActionWindow(QMainWindow):
         self.close()
         self.add_accommodation_window.show()
 
+    def plan(self):
+        self.add_plan_window = AddPlanWindow(self.previous_window, self.travel)
+        self.close()
+        self.add_plan_window.show()
+
+    def transport(self):
+        self.add_transport_window = AddTransportWindow(self.previous_window, self.travel)
+        self.close()
+        self.add_transport_window.show()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -85,6 +101,6 @@ if __name__ == "__main__":
     dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
     app.setPalette(dark_palette)
-    viewer = ChooseActionWindow()
+    viewer = ChooseActionWindow(None, None)
     viewer.show()
     sys.exit(app.exec())
