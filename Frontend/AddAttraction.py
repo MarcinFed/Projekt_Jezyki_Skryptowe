@@ -6,8 +6,11 @@ from PyQt6.QtGui import QPalette, QColor, QIcon
 
 
 class AddAttractionWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, previous_window, day):
         super().__init__()
+
+        self.previous_window = previous_window
+        self.day = day
 
         self.setWindowTitle("Atrakcja")
         self.setWindowIcon(QIcon("Logo.jpg"))
@@ -98,18 +101,33 @@ class AddAttractionWindow(QMainWindow):
 
         self.main_layout.addLayout(self.middle_layout)
 
+        self.open_button = QPushButton("Otwórz bilet")
+        self.open_button.setEnabled(False)
+        self.main_layout.addWidget(self.open_button)
+
         self.middle_bottom_layout = QHBoxLayout()
 
         self.cancel_button = QPushButton("Anuluj")
         self.cancel_button.setStyleSheet("background-color: darkred; color: black;")
+        self.cancel_button.clicked.connect(self.cancel)
         self.middle_bottom_layout.addWidget(self.cancel_button)
 
         self.save_button = QPushButton("Zapisz")
         self.save_button.setStyleSheet("background-color: darkgreen; color: black;")
+        self.save_button.clicked.connect(self.save)
 
         self.middle_bottom_layout.addWidget(self.save_button)
 
         self.main_layout.addLayout(self.middle_bottom_layout)
+
+    def cancel(self):
+        self.close()
+        self.previous_window.show()
+
+    def save(self):
+        self.close()
+        self.previous_window.add_tile()
+        self.previous_window.show()
 
 
 if __name__ == "__main__":
@@ -130,6 +148,6 @@ if __name__ == "__main__":
     dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
     app.setPalette(dark_palette)
-    viewer = AddAccommodation()
+    viewer = AddAttractionWindow(None,None)
     viewer.show()
     sys.exit(app.exec())

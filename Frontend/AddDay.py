@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
 from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
 from Backend.Day import Day
+from AddAttraction import AddAttractionWindow
 
 
 class AddDayWindow(QMainWindow):
@@ -12,10 +13,12 @@ class AddDayWindow(QMainWindow):
 
         self.previous_window = previous_window
         self.day = day
+        self.add_attraction_window = None
 
-        self.setWindowTitle("Dzień ")
+        self.setWindowTitle(self.day.day)
         self.setWindowIcon(QIcon("Logo.jpg"))
-        self.setMinimumWidth(400)
+        self.setMinimumWidth(300)
+        self.setMinimumHeight(500)
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -29,10 +32,26 @@ class AddDayWindow(QMainWindow):
         self.day_label.setStyleSheet("font-weight: bold;")
         self.top_layout.addWidget(self.day_label)
 
-        self.temp_label = QLabel(str(self.day.temperature))
+        self.temp_label = QLabel("Przewidywana temperatura: " + str(self.day.temperature) + "°C")
         self.temp_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.temp_label.setStyleSheet("font-weight: bold;")
         self.top_layout.addWidget(self.temp_label)
+
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+
+        self.scroll_content = QWidget()
+        self.scroll_layout = QVBoxLayout(self.scroll_content)
+
+        self.add_button = QPushButton("+")
+        self.add_button.clicked.connect(self.add_attraction)
+
+        self.scroll_layout.addWidget(self.add_button)
+
+        self.scroll_area.setWidget(self.scroll_content)
+        self.top_layout.addWidget(self.scroll_area)
+
+        self.main_layout.addLayout(self.top_layout)
 
         self.bottom_layout = QHBoxLayout()
 
@@ -52,6 +71,15 @@ class AddDayWindow(QMainWindow):
     def cancel(self):
         self.close()
         self.previous_window.show()
+
+    def add_tile(self):
+        new_tile = QPushButton("Nowy element")
+        self.scroll_layout.insertWidget(self.scroll_layout.count() - 1, new_tile)
+
+    def add_attraction(self):
+        self.add_attraction_window = AddAttractionWindow(self, self.day)
+        self.close()
+        self.add_attraction_window.show()
 
 
 if __name__ == "__main__":

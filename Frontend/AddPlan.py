@@ -73,7 +73,7 @@ class AddPlanWindow(QMainWindow):
     def update_plans_list(self):
         self.plans_list.clear()
         for day in self.travel.plan.days:
-            plan_name = str(day.date.strftime("%Y-%m-%d")) + " " + str(day.day) + " " + str(day.temperature) + "C"
+            plan_name = str(day.date.strftime("%Y-%m-%d")) + " " + str(day.day)
             item = QListWidgetItem(plan_name)
             item.day = day
             self.plans_list.addItem(item)

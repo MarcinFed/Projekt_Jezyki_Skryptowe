@@ -1,6 +1,7 @@
 from Backend.Activity import Activity
 from Backend.Day import Day
 from datetime import datetime, timedelta
+from mtranslate import translate
 
 
 class Plan:
@@ -39,7 +40,11 @@ class Plan:
         current_date = self.__start_date
         while current_date <= self.__end_date:
             formatted_date = current_date.strftime("%Y-%m-%d")
-            day_of_week = current_date.strftime("%A")
+            day_of_week = self.translate_day_of_week(current_date.strftime("%A"))
             new_day = Day(formatted_date, day_of_week, self.__city)
             self.__days.append(new_day)
             current_date += timedelta(days=1)
+
+    def translate_day_of_week(self, day_of_week):
+        translation = translate(day_of_week, "pl", "en")
+        return translation
