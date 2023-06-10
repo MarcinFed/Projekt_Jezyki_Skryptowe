@@ -15,15 +15,12 @@ class Travel:
         self.__transport_to = None
         self.__transport_from = None
         self.__accommodation = None
-        self.__plan = None
+        self.__plan = Plan(self.__start_date, self.__end_date, self.__destination)
+        self.__medium_temp = self.set_medium_temperature()
 
     @property
     def plan(self):
         return self.__plan
-
-    @plan.setter
-    def plan(self):
-        self.__plan = Plan()
 
     @property
     def transport_to(self):
@@ -71,3 +68,16 @@ class Travel:
     @property
     def days(self):
         return self.__days
+
+    @property
+    def medium_temp(self):
+        return self.__medium_temp
+
+    def set_medium_temperature(self):
+        temps = []
+        for day in self.__plan.days:
+            temps.append(day.temperature)
+
+        average = sum(temps)/len(temps)
+        formatted_average = f"{average:.1f}"
+        return formatted_average

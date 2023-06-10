@@ -208,6 +208,7 @@ class MainWindow(QMainWindow):
             self.transport_from_view.setText(travel.transport_from.transport_type if travel.transport_from is not None else "")
             self.accommodation_view.setText(travel.accommodation.name if travel.accommodation is not None else "")
             self.date_view.setText(str(travel.start_date) + " - " + str(travel.end_date))
+            self.temperature_view.setText(str(travel.medium_temp))
             self.days_view.setText(str(travel.days))
 
     def clear_detail(self):

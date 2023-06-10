@@ -1,13 +1,15 @@
 from Backend.Activity import Activity
+from Backend.Day import Day
+from datetime import datetime, timedelta
 
 
 class Plan:
-    def __init__(self, start_date, start_hour, end_date, end_hour):
+    def __init__(self, start_date, end_date, city):
         self.__start_date = start_date
-        self.__start_hour = start_hour
         self.__end_date = end_date
-        self.__end_hour = end_hour
         self.__days = []
+        self.__city = city
+        self.make_days()
 
     @property
     def start_date(self):
@@ -18,14 +20,6 @@ class Plan:
         self.__start_date = start_date
 
     @property
-    def start_hour(self):
-        return self.__start_hour
-
-    @start_hour.setter
-    def start_hour(self, start_hour):
-        self.__start_hour = start_hour
-
-    @property
     def end_date(self):
         return self.__end_date
 
@@ -34,17 +28,18 @@ class Plan:
         self.__end_date = end_date
 
     @property
-    def end_hour(self):
-        return self.__end_hour
-
-    @end_hour.setter
-    def end_hour(self, end_hour):
-        self.__end_hour = end_hour
-
-    @property
     def days(self):
         return self.__days
 
     @days.setter
     def days(self, day, activity):
         self.__days[day].add_activity()
+
+    def make_days(self):
+        current_date = self.__start_date
+        while current_date <= self.__end_date:
+            formatted_date = current_date.strftime("%Y-%m-%d")
+            day_of_week = current_date.strftime("%A")
+            new_day = Day(formatted_date, day_of_week, self.__city)
+            self.__days.append(new_day)
+            current_date += timedelta(days=1)
