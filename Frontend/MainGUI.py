@@ -186,6 +186,7 @@ class MainWindow(QMainWindow):
             self.app.travels.remove(selected_travel)
         self.update_travels_list()
         self.clear_detail()
+        self.disable_buttons()
 
     def open_confirm_decision(self):
         travel_name = self.travels_list.selectedItems()[0].travel.name
