@@ -2,7 +2,9 @@ from Backend.Plan import Plan
 from Backend.Transport import Transport
 from Backend.Accommodation import Accommodation
 from Backend.Localization import Localization
-from datetime import datetime
+import os
+import vobject
+import datetime
 
 
 class Travel:
@@ -81,3 +83,26 @@ class Travel:
         average = sum(temps)/len(temps)
         formatted_average = f"{average:.1f}"
         return formatted_average
+
+    def add_to_calendar(self):
+        calendar = vobject.iCalendar()
+
+        travel = calendar.add("vevent")
+        travel.add("summary").value = self.name
+        travel.add("location").value = self.destination
+
+        to_departure_time = datetime.datetime.strptime(self.transport_to.departure_hour, "%H:%M").time()
+        start_datetime = datetime.datetime.combine(self.start_date, to_departure_time)
+        from_departure_time = datetime.datetime.strptime(self.transport_from.departure_hour, "%H:%M").time()
+        end_datetime = datetime.datetime.combine(self.end_date, from_departure_time)
+
+        travel.add("dtstart").value = start_datetime
+        travel.add("dtend").value = end_datetime
+
+        calendar_path = "Calendar\\"+self.name+".ics"
+
+        if not os.path.exists("Calendar"):
+            os.makedirs("Calendar")
+
+        with open(calendar_path, "w") as file:
+            file.write(calendar.serialize())

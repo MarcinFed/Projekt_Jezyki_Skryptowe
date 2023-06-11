@@ -33,7 +33,6 @@ class Day:
 
         response = requests.get(url)
         data = response.json()
-        print(data)
         temperature = data['forecast']['forecastday'][0]['day']['avgtemp_c']
         return temperature
 
@@ -71,7 +70,8 @@ class Day:
 
     def add_activity(self, name, start_hour, end_hour, city, street, post, building, apartment, ticket_needed, pdf_ticket):
         localization = Localization(city, street, post, building, apartment)
-        self.__activities.append(Activity(name, start_hour, end_hour, ticket_needed, pdf_ticket, localization))
+        activity = Activity(name, start_hour, end_hour, ticket_needed, pdf_ticket, localization)
+        self.__activities.append(activity)
         self.__activities = sorted(self.__activities, key=lambda activity: activity.start_hour)
 
     def translate_city(self, city):

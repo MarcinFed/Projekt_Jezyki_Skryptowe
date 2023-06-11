@@ -126,6 +126,7 @@ class MainWindow(QMainWindow):
         self.calendar_button = QPushButton("Dodaj do kolendarza")
         self.calendar_button.setStyleSheet("background-color: darkorange; color: black;")
         self.calendar_button.setEnabled(False)
+        self.calendar_button.clicked.connect(self.add_to_calendar)
 
         self.update_button_colors()
 
@@ -228,6 +229,12 @@ class MainWindow(QMainWindow):
     def load(self):
         self.app.load_from_file()
         self.update_travels_list()
+
+    def add_to_calendar(self):
+        selected_travels = self.travels_list.selectedItems()
+        if selected_travels:
+            travel = selected_travels[0].travel
+            travel.add_to_calendar()
 
 
 if __name__ == "__main__":

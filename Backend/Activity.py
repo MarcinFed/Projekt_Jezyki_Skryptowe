@@ -1,3 +1,6 @@
+from Backend.Localization import Localization
+
+
 class Activity:
     def __init__(self, name, start_hour, end_hour, ticket_needed=False, pdf_ticket=None, localization=None):
         self.__name = name
@@ -20,7 +23,7 @@ class Activity:
         return self.__start_hour
 
     @start_hour.setter
-    def name(self, start_hour):
+    def start_hour(self, start_hour):
         self.__start_hour = start_hour
 
     @property
@@ -28,7 +31,7 @@ class Activity:
         return self.__end_hour
 
     @end_hour.setter
-    def name(self, end_hour):
+    def end_hour(self, end_hour):
         self.__end_hour = end_hour
 
     @property
@@ -36,7 +39,7 @@ class Activity:
         return self.__ticket_needed
 
     @ticket_needed.setter
-    def name(self, ticket_needed):
+    def ticket_needed(self, ticket_needed):
         self.__ticket_needed = ticket_needed
 
     @property
@@ -44,7 +47,7 @@ class Activity:
         return self.__pdf_ticket
 
     @pdf_ticket.setter
-    def name(self, pdf_ticket):
+    def pdf_ticket(self, pdf_ticket):
         self.__pdf_ticket = pdf_ticket
 
     @property
@@ -53,4 +56,5 @@ class Activity:
 
     @localization.setter
     def localization(self, localization):
-        self.__localization = localization
+        city, street, post, building, apartment = localization
+        self.__localization = Localization(city, street, post, building, apartment)

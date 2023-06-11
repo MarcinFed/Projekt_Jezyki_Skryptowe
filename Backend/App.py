@@ -20,6 +20,10 @@ class App:
         data = {
             'travels': self.__travels,
         }
+
+        if not os.path.exists("Saves"):
+            os.makedirs("Saves")
+
         with open(self.__filename, "wb") as file:
             pickle.dump(data, file)
 
@@ -27,5 +31,3 @@ class App:
         with open(self.__filename, "rb") as file:
             data = pickle.load(file)
         self.__travels = data['travels']
-
-

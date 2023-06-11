@@ -1,17 +1,18 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
                             QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QTimeEdit, QCheckBox, QMessageBox
-from PyQt6.QtCore import QDateTime, Qt
+from PyQt6.QtCore import QDateTime, Qt,QTime
 from PyQt6.QtGui import QPalette, QColor, QIcon
 import subprocess
 
 
 class AddActivityWindow(QMainWindow):
-    def __init__(self, previous_window, day):
+    def __init__(self, previous_window, day=None, activity=None):
         super().__init__()
 
         self.previous_window = previous_window
         self.day = day
+        self.activity = activity
 
         self.setWindowTitle("Atrakcja")
         self.setWindowIcon(QIcon("Logo.jpg"))
@@ -139,6 +140,26 @@ class AddActivityWindow(QMainWindow):
 
         self.main_layout.addLayout(self.middle_bottom_layout)
 
+        self.load()
+        self.update_buttons()
+
+    def load(self):
+        if self.activity:
+            self.name_view.setText(self.activity.name)
+            self.from_hour_view.setTime(QTime.fromString(self.activity.start_hour, "HH:mm"))
+            self.to_hour_view.setTime(QTime.fromString(self.activity.end_hour, "HH:mm"))
+            self.city_view.setText(self.activity.localization.city)
+            self.street_view.setText(self.activity.localization.street_name)
+            self.post_view.setText(self.activity.localization.post_code)
+            self.building_view.setText(self.activity.localization.building_number)
+            self.apartment_view.setText(self.activity.localization.apartment_number)
+            self.ticket_checkbox.setChecked(self.activity.ticket_needed)
+            self.file_path_label.setText(self.activity.pdf_ticket)
+
+    def update_buttons(self):
+        self.enable_open_ticket() if self.file_path_label.text() != "" else self.disable_open_ticket()
+        self.ticket_button_enable()
+
     def cancel(self):
         self.close()
         self.previous_window.show()
@@ -152,26 +173,34 @@ class AddActivityWindow(QMainWindow):
         post = self.post_view.text()
         building = self.building_view.text()
         apartment = self.apartment_view.text()
-        ticket_needed = self.ticket_checkbox.text()
+        ticket_needed = self.ticket_checkbox.isChecked()
         pdf_ticket = self.file_path_label.text()
-        if name and start_hour and end_hour:
+        if name and start_hour and end_hour and self.day:
             self.day.add_activity(name, start_hour, end_hour, city, street, post, building, apartment, ticket_needed, pdf_ticket)
             self.close()
-            self.previous_window.add_tile(name + " " + start_hour + " - " + end_hour)
+            self.previous_window.update_items()
+            self.previous_window.show()
+        elif name and start_hour and end_hour and self.activity:
+            self.activity.name = name
+            self.activity.ticket_needed = ticket_needed
+            self.activity.pdf_ticket = pdf_ticket
+            self.activity.localization = city, street, post, building, apartment
+            self.close()
+            self.previous_window.update_items()
+            self.previous_window.disable_edit()
             self.previous_window.show()
         else:
             error_message = "Proszę uzupełnić wszystkie wymagane\npola oznaczone znakiem *"
             QMessageBox.critical(self, "Błąd", error_message)
 
     def ticket_button_enable(self):
-        if self.ticket_button.isEnabled():
+        if self.ticket_checkbox.isChecked():
+            self.ticket_button.setEnabled(True)
+            self.ticket_button.setStyleSheet("background-color: ; color: black;")
+        else:
             self.ticket_button.setEnabled(False)
             self.ticket_button.setStyleSheet("background-color: #181818; color: white;")
             self.delete_ticket()
-
-        else:
-            self.ticket_button.setEnabled(True)
-            self.ticket_button.setStyleSheet("background-color: ; color: black;")
 
     def enable_open_ticket(self):
         self.open_button.setEnabled(True)

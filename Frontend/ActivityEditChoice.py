@@ -3,15 +3,21 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
                             QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QCalendarWidget
 from PyQt6.QtCore import QDateTime, Qt, QDate
 from PyQt6.QtGui import QPalette, QColor, QIcon
+from AddActivity import AddActivityWindow
 
 
-class AttractionEditChoice(QMainWindow):
-    def __init__(self):
+class ActivityEditChoiceWindow(QMainWindow):
+    def __init__(self, previous_window, activity, activity_list):
         super().__init__()
+
+        self.previous_window = previous_window
+        self.activity = activity
+        self.activity_list = activity_list
+        self.add_activity_window = None
 
         self.setWindowTitle("Edycja")
         self.setWindowIcon(QIcon("Logo.jpg"))
-        self.setMinimumWidth(300)
+        self.setMinimumWidth(200)
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -28,9 +34,11 @@ class AttractionEditChoice(QMainWindow):
 
         self.edit_button = QPushButton("Edytuj")
         self.edit_button.setStyleSheet("background-color: darkblue; color: black;")
+        self.edit_button.clicked.connect(self.edit)
 
         self.delete_button = QPushButton("Usuń")
         self.delete_button.setStyleSheet("background-color: darkred; color: black;")
+        self.delete_button.clicked.connect(self.delete)
 
         self.middle_layout.addWidget(self.delete_button)
         self.middle_layout.addWidget(self.edit_button)
@@ -39,12 +47,29 @@ class AttractionEditChoice(QMainWindow):
 
         self.cancel_button = QPushButton("Anuluj")
         self.cancel_button.setStyleSheet("background-color: darkorange; color: black;")
+        self.cancel_button.clicked.connect(self.cancel)
 
         self.bottom_layout.addWidget(self.cancel_button)
 
         self.main_layout.addLayout(self.top_layout)
         self.main_layout.addLayout(self.middle_layout)
         self.main_layout.addLayout(self.bottom_layout)
+
+    def cancel(self):
+        self.close()
+        self.previous_window.show()
+
+    def delete(self):
+        self.activity_list.remove(self.activity)
+        self.close()
+        self.previous_window.update_items()
+        self.previous_window.disable_edit()
+        self.previous_window.show()
+
+    def edit(self):
+        self.add_activity_window = AddActivityWindow(self.previous_window, activity=self.activity, day=None)
+        self.close()
+        self.add_activity_window.show()
 
 
 if __name__ == "__main__":
@@ -65,6 +90,6 @@ if __name__ == "__main__":
     dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
     app.setPalette(dark_palette)
-    viewer = AttractionEditChoice()
+    viewer = ActivityEditChoiceWindow(None, None)
     viewer.show()
     sys.exit(app.exec())

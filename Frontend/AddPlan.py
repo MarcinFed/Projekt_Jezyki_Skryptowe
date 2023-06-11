@@ -44,16 +44,11 @@ class AddPlanWindow(QMainWindow):
 
         self.bottom_layout = QHBoxLayout()
 
-        self.cancel_button = QPushButton("Anuluj")
-        self.cancel_button.setStyleSheet("background-color: darkred; color: black;")
+        self.cancel_button = QPushButton("Zamknij")
+        self.cancel_button.setStyleSheet("background-color: ; color: black;")
         self.cancel_button.clicked.connect(self.cancel)
 
         self.bottom_layout.addWidget(self.cancel_button)
-
-        self.save_button = QPushButton("Zapisz")
-        self.save_button.setStyleSheet("background-color: darkgreen; color: black;")
-
-        self.bottom_layout.addWidget(self.save_button)
 
         self.main_layout.addLayout(self.bottom_layout)
 
@@ -77,7 +72,6 @@ class AddPlanWindow(QMainWindow):
             item = QListWidgetItem(plan_name)
             item.day = day
             self.plans_list.addItem(item)
-
 
 
 if __name__ == "__main__":

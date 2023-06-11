@@ -5,20 +5,21 @@ from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
 from Backend.Day import Day
 from AddActivity import AddActivityWindow
+from ActivityEditChoice import ActivityEditChoiceWindow
 
 
 class AddDayWindow(QMainWindow):
     def __init__(self, previous_window, day):
         super().__init__()
-
         self.previous_window = previous_window
         self.day = day
-        self.add_attraction_window = None
+        self.add_activity_window = None
+        self.activity_edit_choice_window = None
 
         self.setWindowTitle(self.day.day)
         self.setWindowIcon(QIcon("Logo.jpg"))
         self.setMinimumWidth(300)
-        self.setMinimumHeight(500)
+        self.setMinimumHeight(300)
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -40,46 +41,68 @@ class AddDayWindow(QMainWindow):
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
 
-        self.scroll_content = QWidget()
-        self.scroll_layout = QVBoxLayout(self.scroll_content)
+        self.activity_list = QListWidget()
+        self.activity_list.itemSelectionChanged.connect(self.enable_edit)
+        self.scroll_layout = QVBoxLayout(self.activity_list)
 
-        self.add_button = QPushButton("+")
-        self.add_button.clicked.connect(self.add_attraction)
-
-        self.scroll_layout.addWidget(self.add_button)
-
-        self.scroll_area.setWidget(self.scroll_content)
+        self.scroll_area.setWidget(self.activity_list)
         self.top_layout.addWidget(self.scroll_area)
 
         self.main_layout.addLayout(self.top_layout)
 
+        self.edit_button = QPushButton("Edytuj")
+        self.edit_button.setStyleSheet("background-color: #181818; color: white;")
+        self.edit_button.setEnabled(False)
+        self.edit_button.clicked.connect(self.edit_activity)
+
+        self.main_layout.addWidget(self.edit_button)
+
+        self.add_button = QPushButton("+")
+        self.add_button.clicked.connect(self.add_activity)
+
+        self.main_layout.addWidget(self.add_button)
+
         self.bottom_layout = QHBoxLayout()
 
-        self.cancel_button = QPushButton("Anuluj")
-        self.cancel_button.setStyleSheet("background-color: darkred; color: black;")
+        self.cancel_button = QPushButton("Zamknij")
+        self.cancel_button.setStyleSheet("background-color: ; color: black;")
         self.cancel_button.clicked.connect(self.cancel)
 
         self.bottom_layout.addWidget(self.cancel_button)
 
-        self.save_button = QPushButton("Zapisz")
-        self.save_button.setStyleSheet("background-color: darkgreen; color: black;")
-
-        self.bottom_layout.addWidget(self.save_button)
-
         self.main_layout.addLayout(self.bottom_layout)
+
+        self.update_items()
 
     def cancel(self):
         self.close()
         self.previous_window.show()
 
-    def add_tile(self, name):
-        new_tile = QPushButton(name)
-        self.scroll_layout.insertWidget(self.scroll_layout.count() - 1, new_tile)
+    def update_items(self):
+        self.activity_list.clear()
+        for activity in self.day.activity_list:
+            activity_name = activity.name + " " + activity.start_hour + " - " + activity.end_hour
+            item = QListWidgetItem(activity_name)
+            item.activity = activity
+            self.activity_list.addItem(item)
 
-    def add_attraction(self):
-        self.add_attraction_window = AddActivityWindow(self, self.day)
+    def add_activity(self):
+        self.add_activity_window = AddActivityWindow(self, self.day, )
         self.close()
-        self.add_attraction_window.show()
+        self.add_activity_window.show()
+
+    def enable_edit(self):
+        self.edit_button.setEnabled(True)
+        self.edit_button.setStyleSheet("background-color: darkblue; color: black;")
+
+    def disable_edit(self):
+        self.edit_button.setEnabled(False)
+        self.edit_button.setStyleSheet("background-color: #181818; color: white;")
+
+    def edit_activity(self):
+        self.activity_edit_choice_window = ActivityEditChoiceWindow(self, self.activity_list.selectedItems()[0].activity, self.day.activity_list)
+        self.close()
+        self.activity_edit_choice_window.show()
 
 
 if __name__ == "__main__":
