@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
 from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
 from Backend.Day import Day
-from AddAttraction import AddAttractionWindow
+from AddActivity import AddActivityWindow
 
 
 class AddDayWindow(QMainWindow):
@@ -72,12 +72,12 @@ class AddDayWindow(QMainWindow):
         self.close()
         self.previous_window.show()
 
-    def add_tile(self):
-        new_tile = QPushButton("Nowy element")
+    def add_tile(self, name):
+        new_tile = QPushButton(name)
         self.scroll_layout.insertWidget(self.scroll_layout.count() - 1, new_tile)
 
     def add_attraction(self):
-        self.add_attraction_window = AddAttractionWindow(self, self.day)
+        self.add_attraction_window = AddActivityWindow(self, self.day)
         self.close()
         self.add_attraction_window.show()
 

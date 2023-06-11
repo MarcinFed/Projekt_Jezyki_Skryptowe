@@ -1,9 +1,8 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
-                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QCalendarWidget, QComboBox, QTimeEdit
-from PyQt6.QtCore import QDateTime, Qt, QDate
+                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QCalendarWidget, QComboBox, QTimeEdit, QMessageBox
+from PyQt6.QtCore import QDateTime, Qt, QDate, QTime
 from PyQt6.QtGui import QPalette, QColor, QIcon, QDoubleValidator
-from WrongInput import WrongInputWindow
 import subprocess
 
 
@@ -48,7 +47,7 @@ class AddTransportWindow(QMainWindow):
         self.time_validator = QDoubleValidator()
         self.to_time_view.setValidator(self.time_validator)
 
-        self.to_transport_type_label = QLabel("Środek transportu")
+        self.to_transport_type_label = QLabel("Środek transportu *")
         self.left_layout.addWidget(self.to_transport_type_label)
 
         self.to_transport_type = QComboBox()
@@ -124,7 +123,7 @@ class AddTransportWindow(QMainWindow):
         self.time_validator = QDoubleValidator()
         self.from_time_view.setValidator(self.time_validator)
 
-        self.from_transport_type_label = QLabel("Środek transportu")
+        self.from_transport_type_label = QLabel("Środek transportu *")
         self.right_layout.addWidget(self.from_transport_type_label)
 
         self.from_transport_type = QComboBox()
@@ -178,6 +177,20 @@ class AddTransportWindow(QMainWindow):
         self.main_layout.addLayout(self.left_layout)
         self.main_layout.addLayout(self.right_layout)
 
+        self.load()
+        self.update_buttons()
+
+    def load(self):
+        if self.travel.transport_to:
+            self.to_hour_view.setTime(QTime.fromString(self.travel.transport_to.departure_hour, "HH:mm"))
+            self.to_time_view.setText(self.travel.transport_to.time)
+            self.to_transport_type.setCurrentText(self.travel.transport_to.transport_type)
+            self.to_file_path_label.setText(self.travel.transport_to.pdf_ticket)
+            self.from_hour_view.setTime(QTime.fromString(self.travel.transport_from.departure_hour, "HH:mm"))
+            self.from_time_view.setText(self.travel.transport_from.time)
+            self.from_transport_type.setCurrentText(self.travel.transport_from.transport_type)
+            self.from_file_path_label.setText(self.travel.transport_from.pdf_ticket)
+
     def cancel(self):
         self.close()
         self.previous_window.show()
@@ -190,9 +203,8 @@ class AddTransportWindow(QMainWindow):
             self.previous_window.show()
             self.previous_window.update_details()
         else:
-            self.wrong_input_window = WrongInputWindow(self)
-            self.hide()
-            self.wrong_input_window.show()
+            error_message = "Proszę uzupełnić wszystkie wymagane\npola oznaczone znakiem *"
+            QMessageBox.critical(self, "Błąd", error_message)
 
     def to_transport_button(self):
         if self.to_transport_type.currentIndex() > 1:
@@ -214,19 +226,37 @@ class AddTransportWindow(QMainWindow):
         file_name, _ = QFileDialog.getOpenFileName(self, "Dodaj swój bilet", "", "Bilety (*.pdf)")
         if file_name:
             self.to_file_path_label.setText(file_name)
-            self.to_open_button.setEnabled(True)
-            self.to_open_button.setStyleSheet("background-color: ; color: white;")
-            self.delete_ticket_to_button.setEnabled(True)
-            self.delete_ticket_to_button.setStyleSheet("background-color: darkred; color: black;")
+            self.enable_ticket_to()
 
     def add_ticket_from(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Dodaj swój bilet", "", "Bilety (*.pdf)")
         if file_name:
             self.from_file_path_label.setText(file_name)
-            self.from_open_button.setEnabled(True)
-            self.from_open_button.setStyleSheet("background-color: ; color: white;")
-            self.delete_ticket_from_button.setEnabled(True)
-            self.delete_ticket_from_button.setStyleSheet("background-color: darkred; color: black;")
+            self.enable_ticket_from()
+
+    def enable_ticket_to(self):
+        self.to_open_button.setEnabled(True)
+        self.to_open_button.setStyleSheet("background-color: ; color: white;")
+        self.delete_ticket_to_button.setEnabled(True)
+        self.delete_ticket_to_button.setStyleSheet("background-color: darkred; color: black;")
+
+    def enable_ticket_from(self):
+        self.from_open_button.setEnabled(True)
+        self.from_open_button.setStyleSheet("background-color: ; color: white;")
+        self.delete_ticket_from_button.setEnabled(True)
+        self.delete_ticket_from_button.setStyleSheet("background-color: darkred; color: black;")
+
+    def disable_ticket_to(self):
+        self.to_open_button.setEnabled(False)
+        self.to_open_button.setStyleSheet("background-color: #181818; color: white;")
+        self.delete_ticket_to_button.setEnabled(False)
+        self.delete_ticket_to_button.setStyleSheet("background-color: #181818; color: white;")
+
+    def disable_ticket_from(self):
+        self.from_open_button.setEnabled(False)
+        self.from_open_button.setStyleSheet("background-color: #181818; color: white;")
+        self.delete_ticket_from_button.setEnabled(False)
+        self.delete_ticket_from_button.setStyleSheet("background-color: #181818; color: white;")
 
     def to_open_ticket(self):
         subprocess.run(["start", "", self.to_file_path_label.text()], shell=True)
@@ -236,18 +266,15 @@ class AddTransportWindow(QMainWindow):
 
     def delete_ticket_to(self):
         self.to_file_path_label.setText("")
-        self.to_open_button.setEnabled(False)
-        self.to_open_button.setStyleSheet("background-color: #181818; color: white;")
-        self.delete_ticket_to_button.setEnabled(False)
-        self.delete_ticket_to_button.setStyleSheet("background-color: #181818; color: white;")
+        self.disable_ticket_to()
 
     def delete_ticket_from(self):
         self.from_file_path_label.setText("")
-        self.from_open_button.setEnabled(False)
-        self.from_open_button.setStyleSheet("background-color: #181818; color: white;")
-        self.delete_ticket_from_button.setEnabled(False)
-        self.delete_ticket_from_button.setStyleSheet("background-color: #181818; color: white;")
+        self.disable_ticket_from()
 
+    def update_buttons(self):
+        self.enable_ticket_to() if self.to_file_path_label.text() != "" else self.disable_ticket_to()
+        self.enable_ticket_from() if self.from_file_path_label.text() != "" else self.disable_ticket_from()
 
 
 if __name__ == "__main__":

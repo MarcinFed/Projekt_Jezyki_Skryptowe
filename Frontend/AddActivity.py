@@ -1,11 +1,12 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
-                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QTimeEdit, QCheckBox
+                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QTimeEdit, QCheckBox, QMessageBox
 from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
+import subprocess
 
 
-class AddAttractionWindow(QMainWindow):
+class AddActivityWindow(QMainWindow):
     def __init__(self, previous_window, day):
         super().__init__()
 
@@ -21,25 +22,27 @@ class AddAttractionWindow(QMainWindow):
 
         self.main_layout = QVBoxLayout(self.central_widget)
 
-        self.name_label = QLabel("Nazwa")
+        self.name_label = QLabel("Nazwa *")
         self.main_layout.addWidget(self.name_label)
 
         self.name_view = QLineEdit()
         self.name_view.setReadOnly(False)
         self.main_layout.addWidget(self.name_view)
 
-        self.from_hour_label = QLabel("Godzina rozpoczęcia")
+        self.from_hour_label = QLabel("Godzina rozpoczęcia *")
         self.main_layout.addWidget(self.from_hour_label)
 
         self.from_hour_view = QTimeEdit()
         self.from_hour_view.setDisplayFormat("HH:mm")
+        self.from_hour_view.timeChanged.connect(self.update_to_hour_minimum)
         self.main_layout.addWidget(self.from_hour_view)
 
-        self.to_hour_label = QLabel("Godzina zakończenia")
+        self.to_hour_label = QLabel("Godzina zakończenia *")
         self.main_layout.addWidget(self.to_hour_label)
 
         self.to_hour_view = QTimeEdit()
         self.to_hour_view.setDisplayFormat("HH:mm")
+        self.to_hour_view.timeChanged.connect(self.update_from_hour_maximum)
         self.main_layout.addWidget(self.to_hour_view)
 
         self.city_label = QLabel("Miasto")
@@ -83,6 +86,7 @@ class AddAttractionWindow(QMainWindow):
         self.middle_top_layout.addWidget(self.ticket_label)
 
         self.ticket_checkbox = QCheckBox()
+        self.ticket_checkbox.clicked.connect(self.ticket_button_enable)
         self.middle_top_layout.addWidget(self.ticket_checkbox)
 
         self.spacer = QSpacerItem(40,20,QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -92,18 +96,33 @@ class AddAttractionWindow(QMainWindow):
 
         self.middle_layout = QHBoxLayout()
 
-        self.to_ticket_button = QPushButton("Dodaj bilet")
-        self.middle_layout.addWidget(self.to_ticket_button)
+        self.ticket_button = QPushButton("Dodaj bilet")
+        self.ticket_button.setEnabled(False)
+        self.ticket_button.setStyleSheet("background-color: #181818; color: white;")
+        self.ticket_button.clicked.connect(self.add_ticket)
+        self.middle_layout.addWidget(self.ticket_button)
 
-        self.to_file_path_label = QLineEdit()
-        self.to_file_path_label.setReadOnly(True)
-        self.middle_layout.addWidget(self.to_file_path_label)
+        self.file_path_label = QLineEdit()
+        self.file_path_label.setReadOnly(True)
+        self.middle_layout.addWidget(self.file_path_label)
 
         self.main_layout.addLayout(self.middle_layout)
 
+        self.ticket_layout = QHBoxLayout()
+
+        self.delete_button = QPushButton("Usuń bilet")
+        self.delete_button.setEnabled(False)
+        self.delete_button.setStyleSheet("background-color: #181818; color: white;")
+        self.delete_button.clicked.connect(self.delete_ticket)
+        self.ticket_layout.addWidget(self.delete_button)
+
         self.open_button = QPushButton("Otwórz bilet")
         self.open_button.setEnabled(False)
-        self.main_layout.addWidget(self.open_button)
+        self.open_button.setStyleSheet("background-color: #181818; color: white;")
+        self.open_button.clicked.connect(self.open_ticket)
+        self.ticket_layout.addWidget(self.open_button)
+
+        self.main_layout.addLayout(self.ticket_layout)
 
         self.middle_bottom_layout = QHBoxLayout()
 
@@ -125,9 +144,65 @@ class AddAttractionWindow(QMainWindow):
         self.previous_window.show()
 
     def save(self):
-        self.close()
-        self.previous_window.add_tile()
-        self.previous_window.show()
+        name = self.name_view.text()
+        start_hour = self.from_hour_view.text()
+        end_hour = self.to_hour_view.text()
+        city = self.city_view.text()
+        street = self.street_view.text()
+        post = self.post_view.text()
+        building = self.building_view.text()
+        apartment = self.apartment_view.text()
+        ticket_needed = self.ticket_checkbox.text()
+        pdf_ticket = self.file_path_label.text()
+        if name and start_hour and end_hour:
+            self.day.add_activity(name, start_hour, end_hour, city, street, post, building, apartment, ticket_needed, pdf_ticket)
+            self.close()
+            self.previous_window.add_tile(name + " " + start_hour + " - " + end_hour)
+            self.previous_window.show()
+        else:
+            error_message = "Proszę uzupełnić wszystkie wymagane\npola oznaczone znakiem *"
+            QMessageBox.critical(self, "Błąd", error_message)
+
+    def ticket_button_enable(self):
+        if self.ticket_button.isEnabled():
+            self.ticket_button.setEnabled(False)
+            self.ticket_button.setStyleSheet("background-color: #181818; color: white;")
+            self.delete_ticket()
+
+        else:
+            self.ticket_button.setEnabled(True)
+            self.ticket_button.setStyleSheet("background-color: ; color: black;")
+
+    def enable_open_ticket(self):
+        self.open_button.setEnabled(True)
+        self.open_button.setStyleSheet("background-color: ; color: white;")
+        self.delete_button.setEnabled(True)
+        self.delete_button.setStyleSheet("background-color: darkred; color: black;")
+
+    def disable_open_ticket(self):
+        self.open_button.setEnabled(False)
+        self.open_button.setStyleSheet("background-color: #181818; color: white;")
+        self.delete_button.setEnabled(False)
+        self.delete_button.setStyleSheet("background-color: #181818; color: white;")
+
+    def add_ticket(self):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Dodaj swój bilet", "", "Bilety (*.pdf)")
+        if file_name:
+            self.file_path_label.setText(file_name)
+            self.enable_open_ticket()
+
+    def delete_ticket(self):
+        self.file_path_label.setText("")
+        self.disable_open_ticket()
+
+    def open_ticket(self):
+        subprocess.run(["start", "", self.file_path_label.text()], shell=True)
+
+    def update_from_hour_maximum(self):
+        self.from_hour_view.setMaximumTime(self.to_hour_view.time())
+
+    def update_to_hour_minimum(self):
+        self.to_hour_view.setMinimumTime(self.from_hour_view.time())
 
 
 if __name__ == "__main__":
@@ -148,6 +223,6 @@ if __name__ == "__main__":
     dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
     app.setPalette(dark_palette)
-    viewer = AddAttractionWindow(None,None)
+    viewer = AddActivityWindow(None,None)
     viewer.show()
     sys.exit(app.exec())

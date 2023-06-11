@@ -1,6 +1,8 @@
 import requests
 from datetime import datetime
 from mtranslate import translate
+from Backend.Activity import Activity
+from Backend.Localization import Localization
 
 
 class Day:
@@ -67,8 +69,10 @@ class Day:
     def activity_list(self, activities):
         self.__activities = activities
 
-    def add_activity(self, values):
-        name, start_hour, end_hour, ticket_needed, pdf_ticket, localization = values
+    def add_activity(self, name, start_hour, end_hour, city, street, post, building, apartment, ticket_needed, pdf_ticket):
+        localization = Localization(city, street, post, building, apartment)
+        self.__activities.append(Activity(name, start_hour, end_hour, ticket_needed, pdf_ticket, localization))
+        self.__activities = sorted(self.__activities, key=lambda activity: activity.start_hour)
 
     def translate_city(self, city):
         translation = translate(city, "en", "pl")

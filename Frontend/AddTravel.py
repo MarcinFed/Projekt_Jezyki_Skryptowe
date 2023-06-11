@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
-                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QCalendarWidget
+                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QCalendarWidget, QMessageBox
 from PyQt6.QtCore import QDateTime, Qt, QDate
 from PyQt6.QtGui import QPalette, QColor, QIcon
 
@@ -23,14 +23,14 @@ class AddTravelWindow(QMainWindow):
 
         self.top_layout = QVBoxLayout()
 
-        self.name_label = QLabel("Nazwa")
+        self.name_label = QLabel("Nazwa *")
         self.top_layout.addWidget(self.name_label)
 
         self.name_view = QLineEdit()
         self.name_view.setReadOnly(False)
         self.top_layout.addWidget(self.name_view)
 
-        self.destination_label = QLabel("Cel")
+        self.destination_label = QLabel("Cel *")
         self.top_layout.addWidget(self.destination_label)
 
         self.destination_view = QLineEdit()
@@ -41,22 +41,26 @@ class AddTravelWindow(QMainWindow):
 
         self.left_middle_layout = QVBoxLayout()
 
-        self.date_from_label = QLabel("Data od")
+        self.date_from_label = QLabel("Data od *")
         self.date_from_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.left_middle_layout.addWidget(self.date_from_label)
 
         self.from_date = QCalendarWidget()
+        self.from_date.setMinimumDate(QDate.currentDate())
+        self.from_date.selectionChanged.connect(self.update_to_date)
         self.left_middle_layout.addWidget(self.from_date)
 
         self.middle_layout.addLayout(self.left_middle_layout)
 
         self.right_middle_layout = QVBoxLayout()
 
-        self.date_to_label = QLabel("Data do")
+        self.date_to_label = QLabel("Data do *")
         self.date_to_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.right_middle_layout.addWidget(self.date_to_label)
 
         self.to_date = QCalendarWidget()
+        self.to_date.setMinimumDate(QDate.currentDate())
+        self.to_date.selectionChanged.connect(self.update_from_date)
         self.right_middle_layout.addWidget(self.to_date)
 
         self.middle_layout.addLayout(self.right_middle_layout)
@@ -83,10 +87,25 @@ class AddTravelWindow(QMainWindow):
         self.close()
 
     def create(self):
-        self.app.add_travel(self.name_view.text(), self.destination_view.text(), self.from_date.selectedDate().toPyDate(),  self.to_date.selectedDate().toPyDate())
-        self.previous_window.show()
-        self.previous_window.update_travels_list()
-        self.close()
+        name = self.name_view.text().strip()
+        destination = self.destination_view.text().strip()
+        date_from = self.from_date.selectedDate().toPyDate()
+        date_to = self.to_date.selectedDate().toPyDate()
+
+        if name and destination and date_from and date_to:
+            self.app.add_travel(name, destination, date_from, date_to)
+            self.previous_window.show()
+            self.previous_window.update_travels_list()
+            self.close()
+        else:
+            error_message = "Proszę uzupełnić wszystkie wymagane\npola oznaczone znakiem *"
+            QMessageBox.critical(self, "Błąd", error_message)
+
+    def update_to_date(self):
+        self.to_date.setMinimumDate(self.from_date.selectedDate())
+
+    def update_from_date(self):
+        self.from_date.setMaximumDate(self.to_date.selectedDate())
 
 
 if __name__ == "__main__":

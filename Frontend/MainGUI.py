@@ -46,6 +46,7 @@ class MainWindow(QMainWindow):
         self.save_button = QPushButton("Zapisz")
         self.save_button.setStyleSheet("background-color: #8B93D8; color: black;")
         self.save_button.setEnabled(True)
+        self.save_button.clicked.connect(self.save)
         self.left_top_layout.addWidget(self.save_button)
 
         self.right_top_layout = QVBoxLayout()
@@ -88,7 +89,7 @@ class MainWindow(QMainWindow):
         self.date_view.setReadOnly(True)
         self.right_top_layout.addWidget(self.date_view)
 
-        self.days_label = QLabel("Liczba dni")
+        self.days_label = QLabel("Liczba nocy")
         self.right_top_layout.addWidget(self.days_label)
         self.days_view = QLineEdit()
         self.days_view.setReadOnly(True)
@@ -134,6 +135,8 @@ class MainWindow(QMainWindow):
         self.bottom_layout.addWidget(self.calendar_button)
 
         self.main_layout.addLayout(self.bottom_layout)
+
+        self.load()
 
     def update_button_colors(self):
         # Update the color of the delete_button
@@ -218,6 +221,13 @@ class MainWindow(QMainWindow):
         self.accommodation_view.clear()
         self.date_view.clear()
         self.days_view.clear()
+
+    def save(self):
+        self.app.save_to_file()
+
+    def load(self):
+        self.app.load_from_file()
+        self.update_travels_list()
 
 
 if __name__ == "__main__":

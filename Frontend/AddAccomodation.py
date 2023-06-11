@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
-                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy
+                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QMessageBox
 from PyQt6.QtCore import QDateTime, Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
 from Backend.Localization import Localization
@@ -24,35 +24,35 @@ class AddAccommodationWindow(QMainWindow):
 
         self.top_layout = QVBoxLayout()
 
-        self.name_label = QLabel("Nazwa")
+        self.name_label = QLabel("Nazwa *")
         self.top_layout.addWidget(self.name_label)
 
         self.name_view = QLineEdit()
         self.name_view.setReadOnly(False)
         self.top_layout.addWidget(self.name_view)
 
-        self.city_label = QLabel("Miasto")
+        self.city_label = QLabel("Miasto *")
         self.top_layout.addWidget(self.city_label)
 
         self.city_view = QLineEdit()
         self.city_view.setReadOnly(False)
         self.top_layout.addWidget(self.city_view)
 
-        self.post_label = QLabel("Kod pocztowy")
+        self.post_label = QLabel("Kod pocztowy *")
         self.top_layout.addWidget(self.post_label)
 
         self.post_view = QLineEdit()
         self.post_view.setReadOnly(False)
         self.top_layout.addWidget(self.post_view)
 
-        self.street_label = QLabel("Ulica")
+        self.street_label = QLabel("Ulica *")
         self.top_layout.addWidget(self.street_label)
 
         self.street_view = QLineEdit()
         self.street_view.setReadOnly(False)
         self.top_layout.addWidget(self.street_view)
 
-        self.building_label = QLabel("Nr budynku")
+        self.building_label = QLabel("Nr budynku *")
         self.top_layout.addWidget(self.building_label)
 
         self.building_view = QLineEdit()
@@ -83,15 +83,36 @@ class AddAccommodationWindow(QMainWindow):
         self.main_layout.addLayout(self.top_layout)
         self.main_layout.addLayout(self.bottom_layout)
 
+        self.load()
+
+    def load(self):
+        if self.travel.accommodation:
+            self.name_view.setText(self.travel.accommodation.name)
+            self.city_view.setText(self.travel.accommodation.localization.city)
+            self.post_view.setText(self.travel.accommodation.localization.post_code)
+            self.street_view.setText(self.travel.accommodation.localization.street_name)
+            self.building_view.setText(self.travel.accommodation.localization.building_number)
+            self.apartment_view.setText(self.travel.accommodation.localization.apartment_number)
+
     def cancel(self):
         self.close()
         self.previous_window.show()
 
     def save(self):
-        self.travel.accommodation = self.name_view.text(), self.city_view.text(), self.street_view.text(), self.post_view.text(), self.building_view.text(), self.apartment_view.text()
-        self.close()
-        self.previous_window.show()
-        self.previous_window.update_details()
+        name = self.name_view.text()
+        city = self.city_view.text()
+        street = self.street_view.text()
+        post = self.post_view.text()
+        building = self.building_view.text()
+        apartment = self.apartment_view.text()
+        if name and city and street and post and building:
+            self.travel.accommodation = name, city, street, post, building, apartment
+            self.close()
+            self.previous_window.show()
+            self.previous_window.update_details()
+        else:
+            error_message = "Proszę uzupełnić wszystkie wymagane\npola oznaczone znakiem *"
+            QMessageBox.critical(self, "Błąd", error_message)
 
 
 if __name__ == "__main__":
