@@ -72,6 +72,9 @@ class Day:
         localization = Localization(city, street, post, building, apartment)
         activity = Activity(name, start_hour, end_hour, ticket_needed, pdf_ticket, localization)
         self.__activities.append(activity)
+        self.sort_activities()
+
+    def sort_activities(self):
         self.__activities = sorted(self.__activities, key=lambda activity: activity.start_hour)
 
     def translate_city(self, city):

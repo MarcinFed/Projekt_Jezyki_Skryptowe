@@ -182,6 +182,8 @@ class AddActivityWindow(QMainWindow):
             self.previous_window.show()
         elif name and start_hour and end_hour and self.activity:
             self.activity.name = name
+            self.activity.start_hour = start_hour
+            self.activity.end_hour = end_hour
             self.activity.ticket_needed = ticket_needed
             self.activity.pdf_ticket = pdf_ticket
             self.activity.localization = city, street, post, building, apartment

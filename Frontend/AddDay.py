@@ -80,6 +80,7 @@ class AddDayWindow(QMainWindow):
 
     def update_items(self):
         self.activity_list.clear()
+        self.day.sort_activities()
         for activity in self.day.activity_list:
             activity_name = activity.name + " " + activity.start_hour + " - " + activity.end_hour
             item = QListWidgetItem(activity_name)
