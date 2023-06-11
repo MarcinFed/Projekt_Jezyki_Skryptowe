@@ -74,7 +74,7 @@ class AddAccommodationWindow(QMainWindow):
 
         self.bottom_layout.addWidget(self.cancel_button)
 
-        self.save_button = QPushButton("Zapisz")
+        self.save_button = QPushButton("Zatwierdź")
         self.save_button.setStyleSheet("background-color: darkgreen; color: black;")
         self.save_button.clicked.connect(self.save)
 

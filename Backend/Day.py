@@ -78,8 +78,6 @@ class Day:
         translation = translate(city, "en", "pl")
         return translation
 
-
-
-if __name__ == "__main__":
-    day = Day("2023-06-27", 2, "Ateny")
-    print(day.temperature)
+    def add_to_calendar(self, calendar):
+        for activity in self.__activities:
+            activity.add_to_calendar(calendar, self.date)

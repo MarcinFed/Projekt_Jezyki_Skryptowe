@@ -132,7 +132,7 @@ class AddActivityWindow(QMainWindow):
         self.cancel_button.clicked.connect(self.cancel)
         self.middle_bottom_layout.addWidget(self.cancel_button)
 
-        self.save_button = QPushButton("Zapisz")
+        self.save_button = QPushButton("Zatwierdź")
         self.save_button.setStyleSheet("background-color: darkgreen; color: black;")
         self.save_button.clicked.connect(self.save)
 

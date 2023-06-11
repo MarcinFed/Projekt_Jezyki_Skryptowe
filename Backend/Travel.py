@@ -90,19 +90,32 @@ class Travel:
         travel = calendar.add("vevent")
         travel.add("summary").value = self.name
         travel.add("location").value = self.destination
+        travel.add("description").value = self.accommodation.name
 
-        to_departure_time = datetime.datetime.strptime(self.transport_to.departure_hour, "%H:%M").time()
-        start_datetime = datetime.datetime.combine(self.start_date, to_departure_time)
-        from_departure_time = datetime.datetime.strptime(self.transport_from.departure_hour, "%H:%M").time()
-        end_datetime = datetime.datetime.combine(self.end_date, from_departure_time)
+        start_datetime, end_datetime = self.prepare_time()
 
         travel.add("dtstart").value = start_datetime
         travel.add("dtend").value = end_datetime
+
+        self.transport_to.add_to_calendar(calendar, self.start_date)
+        self.transport_from.add_to_calendar(calendar, self.end_date)
+
+        self.__plan.add_to_calendar(calendar)
 
         calendar_path = "Calendar\\"+self.name+".ics"
 
         if not os.path.exists("Calendar"):
             os.makedirs("Calendar")
 
-        with open(calendar_path, "w") as file:
+        with open(calendar_path, "w", encoding='utf-8') as file:
             file.write(calendar.serialize())
+
+    def prepare_time(self):
+        to_departure_time = datetime.datetime.strptime(self.transport_to.departure_hour, "%H:%M").time()
+        start_datetime = datetime.datetime.combine(self.start_date, to_departure_time)
+
+        from_departure_time = datetime.datetime.strptime(self.transport_from.departure_hour, "%H:%M").time()
+        time_offset = datetime.timedelta(hours=float(self.transport_from.time))
+        end_datetime = datetime.datetime.combine(self.end_date, from_departure_time) + time_offset
+
+        return start_datetime, end_datetime

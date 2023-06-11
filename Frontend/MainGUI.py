@@ -231,10 +231,14 @@ class MainWindow(QMainWindow):
         self.update_travels_list()
 
     def add_to_calendar(self):
-        selected_travels = self.travels_list.selectedItems()
-        if selected_travels:
-            travel = selected_travels[0].travel
-            travel.add_to_calendar()
+        try:
+            selected_travels = self.travels_list.selectedItems()
+            if selected_travels:
+                travel = selected_travels[0].travel
+                travel.add_to_calendar()
+        except:
+            error_message = "Przed dodaniem do kalendarza proszę\nuzupełnić wszystkie wymagane\npola oznaczone znakiem *"
+            QMessageBox.critical(self, "Błąd", error_message)
 
 
 if __name__ == "__main__":

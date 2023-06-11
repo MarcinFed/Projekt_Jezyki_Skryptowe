@@ -48,3 +48,7 @@ class Plan:
     def translate_day_of_week(self, day_of_week):
         translation = translate(day_of_week, "pl", "en")
         return translation
+
+    def add_to_calendar(self, calendar):
+        for day in self.__days:
+            day.add_to_calendar(calendar)

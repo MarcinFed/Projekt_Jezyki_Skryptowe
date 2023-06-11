@@ -169,7 +169,7 @@ class AddTransportWindow(QMainWindow):
 
         self.right_layout.addLayout(self.right_bottom_layout)
 
-        self.save_button = QPushButton("Zapisz")
+        self.save_button = QPushButton("Zatwierdź")
         self.save_button.setStyleSheet("background-color: darkgreen; color: black;")
         self.save_button.clicked.connect(self.save)
         self.right_layout.addWidget(self.save_button)

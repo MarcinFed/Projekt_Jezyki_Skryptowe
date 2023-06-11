@@ -1,4 +1,5 @@
 from Backend.Localization import Localization
+import datetime
 
 
 class Activity:
@@ -58,3 +59,21 @@ class Activity:
     def localization(self, localization):
         city, street, post, building, apartment = localization
         self.__localization = Localization(city, street, post, building, apartment)
+
+    def add_to_calendar(self, calendar, date):
+        activity = calendar.add("vevent")
+        activity.add("summary").value = self.name
+
+        start_datetime, end_datetime = self.prepare_time(date)
+
+        activity.add("dtstart").value = start_datetime
+        activity.add("dtend").value = end_datetime
+
+    def prepare_time(self, date):
+        start_time = datetime.datetime.strptime(self.start_hour, "%H:%M").time()
+        start_datetime = datetime.datetime.combine(date, start_time)
+
+        end_time = datetime.datetime.strptime(self.end_hour, "%H:%M").time()
+        end_datetime = datetime.datetime.combine(date, end_time)
+
+        return start_datetime, end_datetime
