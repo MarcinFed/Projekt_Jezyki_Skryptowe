@@ -101,7 +101,7 @@ class AddTravelWindow(QMainWindow):  # Window for adding new travel
                 # If any required field is empty, show an error message box
                 error_message = "Proszę uzupełnić wszystkie wymagane\npola oznaczone znakiem *"
                 QMessageBox.critical(self, "Błąd", error_message)
-        except:
+        except KeyError:
             error_message = "Proszę wpisać poprawną nazwę\nmiejsca docelowego"
             QMessageBox.critical(self, "Błąd", error_message)
 
