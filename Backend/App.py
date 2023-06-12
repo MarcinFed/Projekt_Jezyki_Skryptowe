@@ -28,6 +28,9 @@ class App:  # Class that stores data about all created travels
             pickle.dump(data, file)  # Serializing the data dictionary and writing it to the file
 
     def load_from_file(self):  # Method to deserialize data from file
-        with open(self.__filename, "rb") as file:  # Opening the file in binary mode for reading
-            data = pickle.load(file)  # Deserializing the data from the file
-        self.__travels = data['travels']  # Updating the list of travels with the loaded data
+        if not os.path.exists("Saves"):  # Checking if the 'Saves' directory exists, if not, creating it
+            os.makedirs("Saves")
+        else:
+            with open(self.__filename, "rb") as file:  # Opening the file in binary mode for reading
+                data = pickle.load(file)  # Deserializing the data from the file
+            self.__travels = data['travels']  # Updating the list of travels with the loaded data
