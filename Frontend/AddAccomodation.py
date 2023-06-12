@@ -1,21 +1,17 @@
-import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
-                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QMessageBox
-from PyQt6.QtCore import QDateTime, Qt
-from PyQt6.QtGui import QPalette, QColor, QIcon
-from Backend.Localization import Localization
+from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
+from PyQt6.QtGui import QIcon
 
 
-class AddAccommodationWindow(QMainWindow):
+class AddAccommodationWindow(QMainWindow):  # Window for adding accommodation
     def __init__(self, previous_window, travel):
         super().__init__()
 
         self.previous_window = previous_window
         self.travel = travel
 
-        self.setWindowTitle("Zakwaterowanie")
-        self.setWindowIcon(QIcon("Logo.jpg"))
-        self.setMinimumWidth(500)
+        self.setWindowTitle("Zakwaterowanie")  # Set the window title
+        self.setWindowIcon(QIcon("Logo.jpg"))  # Set the window icon
+        self.setMinimumWidth(500)  # Set the minimum width of the window
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -24,6 +20,7 @@ class AddAccommodationWindow(QMainWindow):
 
         self.top_layout = QVBoxLayout()
 
+        # Create labels and line edits for accommodation details
         self.name_label = QLabel("Nazwa *")
         self.top_layout.addWidget(self.name_label)
 
@@ -68,12 +65,14 @@ class AddAccommodationWindow(QMainWindow):
 
         self.bottom_layout = QHBoxLayout()
 
+        # Create cancel button
         self.cancel_button = QPushButton("Anuluj")
         self.cancel_button.setStyleSheet("background-color: darkred; color: black;")
         self.cancel_button.clicked.connect(self.cancel)
 
         self.bottom_layout.addWidget(self.cancel_button)
 
+        # Create save button
         self.save_button = QPushButton("Zatwierdź")
         self.save_button.setStyleSheet("background-color: darkgreen; color: black;")
         self.save_button.clicked.connect(self.save)
@@ -86,6 +85,7 @@ class AddAccommodationWindow(QMainWindow):
         self.load()
 
     def load(self):
+        # Load accommodation details into the input fields if an accommodation object is provided
         if self.travel.accommodation:
             self.name_view.setText(self.travel.accommodation.name)
             self.city_view.setText(self.travel.accommodation.localization.city)
@@ -95,10 +95,12 @@ class AddAccommodationWindow(QMainWindow):
             self.apartment_view.setText(self.travel.accommodation.localization.apartment_number)
 
     def cancel(self):
+        # Close the window and show the previous window
         self.close()
         self.previous_window.show()
 
     def save(self):
+        # Get the accommodation details from the input fields and save the accommodation to the travel object
         name = self.name_view.text()
         city = self.city_view.text()
         street = self.street_view.text()
@@ -114,25 +116,3 @@ class AddAccommodationWindow(QMainWindow):
             error_message = "Proszę uzupełnić wszystkie wymagane\npola oznaczone znakiem *"
             QMessageBox.critical(self, "Błąd", error_message)
 
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    app.setStyle(QStyleFactory.create("Fusion"))
-    dark_palette = QPalette()
-    dark_palette.setColor(QPalette.ColorRole.Window, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ColorRole.WindowText, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.Base, QColor(35, 35, 35))
-    dark_palette.setColor(QPalette.ColorRole.AlternateBase, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ColorRole.ToolTipBase, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.ToolTipText, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.Text, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.Button, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ColorRole.ButtonText, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.BrightText, Qt.GlobalColor.red)
-    dark_palette.setColor(QPalette.ColorRole.Link, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
-    app.setPalette(dark_palette)
-    viewer = AddAccommodationWindow(None, None)
-    viewer.show()
-    sys.exit(app.exec())

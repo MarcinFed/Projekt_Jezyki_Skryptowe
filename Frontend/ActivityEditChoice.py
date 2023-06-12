@@ -1,12 +1,10 @@
-import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
-                            QLabel, QLineEdit, QPushButton, QDateTimeEdit, QFileDialog, QStyleFactory,  QSpacerItem, QSizePolicy, QCalendarWidget
-from PyQt6.QtCore import QDateTime, Qt, QDate
-from PyQt6.QtGui import QPalette, QColor, QIcon
+from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon
 from AddActivity import AddActivityWindow
 
 
-class ActivityEditChoiceWindow(QMainWindow):
+class ActivityEditChoiceWindow(QMainWindow):  # Window for choosing the edit for activity
     def __init__(self, previous_window, activity, activity_list):
         super().__init__()
 
@@ -15,9 +13,9 @@ class ActivityEditChoiceWindow(QMainWindow):
         self.activity_list = activity_list
         self.add_activity_window = None
 
-        self.setWindowTitle("Edycja")
-        self.setWindowIcon(QIcon("Logo.jpg"))
-        self.setMinimumWidth(200)
+        self.setWindowTitle("Edycja")  # Set the window title
+        self.setWindowIcon(QIcon("Logo.jpg"))  # Set the window icon
+        self.setMinimumWidth(200)  # Set the minimum width of the window
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -32,10 +30,12 @@ class ActivityEditChoiceWindow(QMainWindow):
 
         self.middle_layout = QHBoxLayout()
 
+        # Create edit button
         self.edit_button = QPushButton("Edytuj")
         self.edit_button.setStyleSheet("background-color: darkblue; color: black;")
         self.edit_button.clicked.connect(self.edit)
 
+        # Create delete button
         self.delete_button = QPushButton("Usuń")
         self.delete_button.setStyleSheet("background-color: darkred; color: black;")
         self.delete_button.clicked.connect(self.delete)
@@ -45,6 +45,7 @@ class ActivityEditChoiceWindow(QMainWindow):
 
         self.bottom_layout = QVBoxLayout()
 
+        # Create cancel button
         self.cancel_button = QPushButton("Anuluj")
         self.cancel_button.setStyleSheet("background-color: darkorange; color: black;")
         self.cancel_button.clicked.connect(self.cancel)
@@ -56,10 +57,12 @@ class ActivityEditChoiceWindow(QMainWindow):
         self.main_layout.addLayout(self.bottom_layout)
 
     def cancel(self):
+        # Close the window and show the previous window
         self.close()
         self.previous_window.show()
 
     def delete(self):
+        # Remove the activity from the activity list, update the previous window, and show the previous window
         self.activity_list.remove(self.activity)
         self.close()
         self.previous_window.update_items()
@@ -67,29 +70,7 @@ class ActivityEditChoiceWindow(QMainWindow):
         self.previous_window.show()
 
     def edit(self):
+        # Open the AddActivityWindow to edit the activity
         self.add_activity_window = AddActivityWindow(self.previous_window, activity=self.activity, day=None)
         self.close()
         self.add_activity_window.show()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    app.setStyle(QStyleFactory.create("Fusion"))
-    dark_palette = QPalette()
-    dark_palette.setColor(QPalette.ColorRole.Window, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ColorRole.WindowText, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.Base, QColor(35, 35, 35))
-    dark_palette.setColor(QPalette.ColorRole.AlternateBase, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ColorRole.ToolTipBase, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.ToolTipText, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.Text, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.Button, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ColorRole.ButtonText, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.ColorRole.BrightText, Qt.GlobalColor.red)
-    dark_palette.setColor(QPalette.ColorRole.Link, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
-    app.setPalette(dark_palette)
-    viewer = ActivityEditChoiceWindow(None, None)
-    viewer.show()
-    sys.exit(app.exec())
