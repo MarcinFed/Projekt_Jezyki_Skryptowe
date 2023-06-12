@@ -85,20 +85,24 @@ class AddTravelWindow(QMainWindow):  # Window for adding new travel
         self.close()  # Close the current window
 
     def create(self):
-        name = self.name_view.text().strip()  # Get the entered name text and remove leading/trailing whitespace
-        destination = self.destination_view.text().strip()  # Get the entered destination text and remove leading/trailing whitespace
-        date_from = self.from_date.selectedDate().toPyDate()  # Get the selected start date
-        date_to = self.to_date.selectedDate().toPyDate()  # Get the selected end date
+        try:
+            name = self.name_view.text().strip()  # Get the entered name text and remove leading/trailing whitespace
+            destination = self.destination_view.text().strip()  # Get the entered destination text and remove leading/trailing whitespace
+            date_from = self.from_date.selectedDate().toPyDate()  # Get the selected start date
+            date_to = self.to_date.selectedDate().toPyDate()  # Get the selected end date
 
-        if name and destination and date_from and date_to:
-            # If all required fields are not empty, proceed with creating the travel
-            self.app.add_travel(name, destination, date_from, date_to)  # Call the app's add_travel method with the provided details
-            self.previous_window.show()  # Show the previous window
-            self.previous_window.update_travels_list()  # Update the travels list in the previous window
-            self.close()  # Close the current window
-        else:
-            # If any required field is empty, show an error message box
-            error_message = "Proszę uzupełnić wszystkie wymagane\npola oznaczone znakiem *"
+            if name and destination and date_from and date_to:
+                # If all required fields are not empty, proceed with creating the travel
+                self.app.add_travel(name, destination, date_from, date_to)  # Call the app's add_travel method with the provided details
+                self.previous_window.show()  # Show the previous window
+                self.previous_window.update_travels_list()  # Update the travels list in the previous window
+                self.close()  # Close the current window
+            else:
+                # If any required field is empty, show an error message box
+                error_message = "Proszę uzupełnić wszystkie wymagane\npola oznaczone znakiem *"
+                QMessageBox.critical(self, "Błąd", error_message)
+        except:
+            error_message = "Proszę wpisać poprawną nazwę\nmiejsca docelowego"
             QMessageBox.critical(self, "Błąd", error_message)
 
     def update_to_date(self):

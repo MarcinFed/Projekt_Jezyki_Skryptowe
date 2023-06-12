@@ -256,6 +256,8 @@ class MainWindow(QMainWindow):  # Main app window
     def save(self):
         # Save the current travels to a file
         self.app.save_to_file()
+        success_save_message = "Plany zostały zapisane"  # Message box informing that operation ended successfully
+        QMessageBox.information(self, "Zapisano", success_save_message)
 
     def load(self):
         # Load travels from a file
@@ -269,6 +271,8 @@ class MainWindow(QMainWindow):  # Main app window
             if selected_travels:
                 travel = selected_travels[0].travel
                 travel.add_to_calendar()
+                success_calendar_message = "Plan został utworzony"  # Message box informing that operation ended successfully
+                QMessageBox.information(self, "Utworzono plan", success_calendar_message)
         except AttributeError:
             error_message = "Przed dodaniem do kalendarza proszę\nuzupełnić wszystkie wymagane\npola oznaczone znakiem *"
             QMessageBox.critical(self, "Błąd", error_message)

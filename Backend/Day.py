@@ -18,23 +18,23 @@ class Day:  # Class that stores the day data
         return self.__temperature
 
     def forecast_weather(self, pl_city, date):  # Method for getting the forecast weather for the dat
-        api_key = "a6a41775e527476da69162248231006"  # API key for weather forecast
-        city = self.translate_city(pl_city)  # Translating the city name to English
+            api_key = "a6a41775e527476da69162248231006"  # API key for weather forecast
+            city = self.translate_city(pl_city)  # Translating the city name to English
 
-        target_date = datetime.strptime(date, "%Y-%m-%d")
-        today = datetime.today()
+            target_date = datetime.strptime(date, "%Y-%m-%d")
+            today = datetime.today()
 
-        if (target_date.date() - today.date()).days > 10:  # If the day is not within the next 10 days then get historical weather
-            previous_year = target_date.year - 1
-            modified_date = target_date.replace(year=previous_year).strftime("%Y-%m-%d")
-            url = f"http://api.weatherapi.com/v1/history.json?key={api_key}&q={city}&dt={modified_date}"
-        else:  # If the day is within the next 10 days then get forecast weather
-            url = f"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={city}&dt={date}"
+            if (target_date.date() - today.date()).days > 10:  # If the day is not within the next 10 days then get historical weather
+                previous_year = target_date.year - 1
+                modified_date = target_date.replace(year=previous_year).strftime("%Y-%m-%d")
+                url = f"http://api.weatherapi.com/v1/history.json?key={api_key}&q={city}&dt={modified_date}"
+            else:  # If the day is within the next 10 days then get forecast weather
+                url = f"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={city}&dt={date}"
 
-        response = requests.get(url)
-        data = response.json()
-        temperature = data['forecast']['forecastday'][0]['day']['avgtemp_c']  # Getting the average temperature for the day
-        return temperature
+            response = requests.get(url)
+            data = response.json()
+            temperature = data['forecast']['forecastday'][0]['day']['avgtemp_c']  # Getting the average temperature for the day
+            return temperature
 
     @property
     def date(self):  # Getter method to access the date of the day

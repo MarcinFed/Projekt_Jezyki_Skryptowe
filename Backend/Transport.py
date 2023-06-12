@@ -54,7 +54,7 @@ class Transport:  # Class that stores the transport data
         start_datetime = datetime.datetime.combine(date, start_time)  # Combining the date and departure time for the event
 
         end_time = datetime.datetime.strptime(self.__departure_hour, "%H:%M").time()  # Parsing the departure hour as a time object
-        end_offset = datetime.timedelta(hours=float(self.__time.replace(",", ".")))  # Calculating the time offset for the end datetime
+        end_offset = datetime.timedelta(hours=float(0 if self.__time == "" else self.__time.replace(",", ".")))  # Calculating the time offset for the end datetime
         end_datetime = datetime.datetime.combine(date, end_time) + end_offset  # Combining the date, departure time, and time offset for the event
 
         return start_datetime, end_datetime  # Returning the start and end datetimes for the event

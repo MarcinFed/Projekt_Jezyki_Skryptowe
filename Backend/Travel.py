@@ -115,7 +115,7 @@ class Travel:  # Class that stores one specified travel data
         start_datetime = datetime.datetime.combine(self.start_date, to_departure_time)  # Combining the start date and departure time for the event
 
         from_departure_time = datetime.datetime.strptime(self.transport_from.departure_hour, "%H:%M").time()  # Parsing the departure time for transport from the destination
-        time_offset = datetime.timedelta(hours=float(self.transport_from.time))  # Calculating the time offset for the end datetime
+        time_offset = datetime.timedelta(hours=float(0 if self.transport_from.time == "" else self.transport_from.time))  # Calculating the time offset for the end datetime
         end_datetime = datetime.datetime.combine(self.end_date, from_departure_time) + time_offset  # Combining the end date, departure time, and time offset for the event
 
         return start_datetime, end_datetime  # Returning the start and end datetimes for the event
