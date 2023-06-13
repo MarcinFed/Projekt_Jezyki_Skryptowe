@@ -11,7 +11,7 @@ class AddTravelWindow(QMainWindow):  # Window for adding new travel
         self.previous_window = window  # Store a reference to the previous window
 
         self.setWindowTitle("Dodaj podróż")  # Set the window title to "Dodaj podróż"
-        self.setWindowIcon(QIcon("Logo.jpg"))  # Set the window icon using the provided image file "Logo.jpg"
+        self.setWindowIcon(QIcon("Frontend\\Logo.jpg"))  # Set the window icon using the provided image file "Logo.jpg"
         self.setMinimumWidth(400)  # Set the minimum width of the window to 400 pixels
 
         self.central_widget = QWidget()  # Create a central widget to hold the main layout

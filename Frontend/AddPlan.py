@@ -15,7 +15,7 @@ class AddPlanWindow(QMainWindow):  # Window for editing plan
 
         # Set window properties
         self.setWindowTitle("Plan")
-        self.setWindowIcon(QIcon("Logo.jpg"))
+        self.setWindowIcon(QIcon("Frontend\\Logo.jpg"))
         self.setMinimumWidth(400)
 
         # Create central widget and set it as the central widget of the window

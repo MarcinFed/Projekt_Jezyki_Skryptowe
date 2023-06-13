@@ -18,7 +18,7 @@ class AddDayWindow(QMainWindow):  # Window for editing day
 
         # Set window properties
         self.setWindowTitle(self.day.day)
-        self.setWindowIcon(QIcon("Logo.jpg"))
+        self.setWindowIcon(QIcon("Frontend\\Logo.jpg"))
         self.setMinimumWidth(300)
         self.setMinimumHeight(300)
 

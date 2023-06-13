@@ -16,7 +16,7 @@ class AddTransportWindow(QMainWindow):  # Window for adding transport
 
         # Set window properties
         self.setWindowTitle("Transport")
-        self.setWindowIcon(QIcon("Logo.jpg"))
+        self.setWindowIcon(QIcon("Frontend\\Logo.jpg"))
         self.setMinimumWidth(600)
 
         # Create central widget and set it as the central widget of the window

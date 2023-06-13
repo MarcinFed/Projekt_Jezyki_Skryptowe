@@ -14,7 +14,7 @@ class ActivityEditChoiceWindow(QMainWindow):  # Window for choosing the edit for
         self.add_activity_window = None
 
         self.setWindowTitle("Edycja")  # Set the window title
-        self.setWindowIcon(QIcon("Logo.jpg"))  # Set the window icon
+        self.setWindowIcon(QIcon("Frontend\\Logo.jpg"))  # Set the window icon
         self.setMinimumWidth(200)  # Set the minimum width of the window
 
         self.central_widget = QWidget()

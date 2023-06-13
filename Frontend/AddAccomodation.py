@@ -10,7 +10,7 @@ class AddAccommodationWindow(QMainWindow):  # Window for adding accommodation
         self.travel = travel
 
         self.setWindowTitle("Zakwaterowanie")  # Set the window title
-        self.setWindowIcon(QIcon("Logo.jpg"))  # Set the window icon
+        self.setWindowIcon(QIcon("Frontend\\Logo.jpg"))  # Set the window icon
         self.setMinimumWidth(500)  # Set the minimum width of the window
 
         self.central_widget = QWidget()

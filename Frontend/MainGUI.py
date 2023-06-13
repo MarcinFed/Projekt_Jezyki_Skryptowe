@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):  # Main app window
 
         # Set window properties
         self.setWindowTitle("TripSet")
-        self.setWindowIcon(QIcon("Logo.jpg"))
+        self.setWindowIcon(QIcon("Frontend\\Logo.jpg"))
         self.setMinimumWidth(700)
 
         # Create central widget
@@ -252,6 +252,7 @@ class MainWindow(QMainWindow):  # Main app window
         self.accommodation_view.clear()
         self.date_view.clear()
         self.days_view.clear()
+        self.temperature_view.clear()
 
     def save(self):
         # Save the current travels to a file

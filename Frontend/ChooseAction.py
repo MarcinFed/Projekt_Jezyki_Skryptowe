@@ -17,7 +17,7 @@ class ChooseActionWindow(QMainWindow):  # Window for chooseing action to do with
         self.add_transport_window = None  # Initialize the transport window reference to None
 
         self.setWindowTitle("Edycja")  # Set the window title to "Edycja"
-        self.setWindowIcon(QIcon("Logo.jpg"))  # Set the window icon using the provided image file "Logo.jpg"
+        self.setWindowIcon(QIcon("Frontend\\Logo.jpg"))  # Set the window icon using the provided image file "Logo.jpg"
         self.setMinimumWidth(300)  # Set the minimum width of the window to 300 pixels
 
         self.central_widget = QWidget()  # Create a central widget to hold the main layout
