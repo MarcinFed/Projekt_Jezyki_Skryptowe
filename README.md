@@ -38,6 +38,34 @@ planning process by making it easier by storing all the important information in
 
 <br>
 
+## How to use
+
+### Main app window
+
+![Main app window](Resources/main_window.png)
+
+In this window, you can see a list of all the trips you have planned; if you click on one, its details will appear on the right-hand side.
+The main application window also contains buttons for:
+* adding new trips,
+* deleting a selected trip,
+* editing a selected trip, 
+* adding a trip to the calendar.
+
+![Calendar error](Resources/Calendar_error.png)
+
+After clicking on "Dodaj do kalendarza", a message will be displayed if all the required fields have not been filled in.
+
+![Calendar save](Resources/Calendar_save.png)
+
+After clicking on "Dodaj do kalendarza", a message will be displayed if all data have been entered correctly.
+
+![Add travel](Resources/Add_Travel_Window.png)
+
+
+
+
+<br>
+
 ## Author
 
 ### Marcin Fedorowicz
