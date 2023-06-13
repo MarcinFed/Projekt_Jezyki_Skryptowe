@@ -1,6 +1,6 @@
 from Backend.App import App
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem, \
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,\
     QLabel, QLineEdit, QPushButton, QStyleFactory, QSpacerItem, QMessageBox
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon

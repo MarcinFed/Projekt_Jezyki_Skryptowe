@@ -1,4 +1,3 @@
-import sys
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem, QLabel, QPushButton
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
