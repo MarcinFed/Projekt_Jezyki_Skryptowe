@@ -18,7 +18,7 @@ class Day:  # Class that stores the day data
         return self.__temperature
 
     def forecast_weather(self, pl_city, date):  # Method for getting the forecast weather for the dat
-            api_key = "a6a41775e527476da69162248231006"  # API key for weather forecast
+            api_key = ""  # API key for weather forecast
             city = self.translate_city(pl_city)  # Translating the city name to English
 
             target_date = datetime.strptime(date, "%Y-%m-%d")
