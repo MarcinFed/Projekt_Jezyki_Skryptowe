@@ -6,7 +6,7 @@ from Frontend.AddPlan import AddPlanWindow
 from Frontend.AddTransport import AddTransportWindow
 
 
-class ChooseActionWindow(QMainWindow):  # Window for chooseing action to do with travel
+class ChooseActionWindow(QMainWindow):  # Window for choosing action to do with travel
     def __init__(self, previous_window, travel):
         super().__init__()
 
