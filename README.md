@@ -6,7 +6,8 @@ planning process by making it easier by storing all the important information in
 ### The app stores information such as:
 * destination and length of the trip,
 * means of transport used to get to and back from the trip,
-* detailed plan for each day.
+* detailed plan for each day,
+* forecasted or archived weather.
 
 ### The application also allows to:
 * keep transport/attraction tickets,
@@ -125,6 +126,7 @@ After choosing to edit the tour itinerary, a window is displayed in which all th
 ![Edit selected day](Resources/Selected_day.png)
 
 After choosing to edit the plan for a specific day, a window of currently set activities for that day is displayed. By clicking on the "+" button, you can add a new activity. The "Edytuj" button allows you to edit the selected activity.
+This window also contains information on the average predicted/archived temperature of the day.
 
 ### Edit choice on activity window
 
