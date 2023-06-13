@@ -2,8 +2,8 @@ from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLis
                             QLabel, QPushButton, QScrollArea
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
-from AddActivity import AddActivityWindow
-from ActivityEditChoice import ActivityEditChoiceWindow
+from Frontend.AddActivity import AddActivityWindow
+from Frontend.ActivityEditChoice import ActivityEditChoiceWindow
 
 
 class AddDayWindow(QMainWindow):  # Window for editing day

@@ -1,9 +1,9 @@
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
-from AddAccomodation import AddAccommodationWindow
-from AddPlan import AddPlanWindow
-from AddTransport import AddTransportWindow
+from Frontend.AddAccomodation import AddAccommodationWindow
+from Frontend.AddPlan import AddPlanWindow
+from Frontend.AddTransport import AddTransportWindow
 
 
 class ChooseActionWindow(QMainWindow):  # Window for chooseing action to do with travel

@@ -4,9 +4,9 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
     QLabel, QLineEdit, QPushButton, QStyleFactory, QSpacerItem, QMessageBox
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPalette, QColor, QIcon
-from AddTravel import AddTravelWindow
-from Confirm import ConfirmWindow
-from ChooseAction import ChooseActionWindow
+from Frontend.AddTravel import AddTravelWindow
+from Frontend.Confirm import ConfirmWindow
+from Frontend.ChooseAction import ChooseActionWindow
 
 
 class MainWindow(QMainWindow):  # Main app window

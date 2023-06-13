@@ -4,6 +4,7 @@ from PyQt6.QtCore import QTime
 from PyQt6.QtGui import QIcon
 import subprocess
 
+
 class AddActivityWindow(QMainWindow):  # Window for adding an activity to the day
     def __init__(self, previous_window, day=None, activity=None):
         super().__init__()

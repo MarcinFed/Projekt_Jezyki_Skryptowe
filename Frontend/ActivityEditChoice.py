@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
-from AddActivity import AddActivityWindow
+from Frontend.AddActivity import AddActivityWindow
 
 
 class ActivityEditChoiceWindow(QMainWindow):  # Window for choosing the edit for activity
